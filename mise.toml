@@ -1,0 +1,46 @@
+[tools]
+"node" = "lts"
+"biome" = "2"
+"dprint" = "0"
+"npm:vite" = "8"
+"npm:vitest" = "4"
+
+[tasks.setup]
+description = "Install tools & dependencies"
+run = "mise install && npm install"
+
+[tasks.dev]
+description = "Start Vite dev server"
+run = "vite"
+
+[tasks.build]
+description = "Build production site"
+run = "vite build --base=./"
+
+[tasks.preview]
+description = "Preview the built site"
+run = "vite preview"
+
+[tasks.fmt]
+description = "Auto-format source files"
+run = "biome check --write . && dprint fmt"
+
+[tasks.fmt-check]
+description = "Check formatting only"
+run = "biome ci . && dprint check"
+
+[tasks.lint]
+description = "Lint source files"
+run = "biome lint ."
+
+[tasks.test]
+description = "Run Vitest tests"
+run = "vitest run"
+
+[tasks.test-watch]
+description = "Run Vitest in watch mode"
+run = "vitest"
+
+[tasks.ci]
+description = "Run all CI checks"
+depends = ["fmt-check", "lint", "test"]
