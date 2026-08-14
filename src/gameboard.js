@@ -5,9 +5,14 @@ export class Gameboard {
     this.grid = Array.from({ length: 10 }, () => Array(10).fill(null));
     this.ships = [];
     this.misses = [];
+    this.attacks = new Set();
   }
 
   placeShip([r, c], length, direction) {
+    // integer check
+    if (!Number.isInteger(r) || !Number.isInteger(c))
+      throw new Error("placement, must be integer");
+
     // length check
     if (length > 5 || length < 2) throw new Error("invalid length");
 
@@ -15,9 +20,12 @@ export class Gameboard {
     if (!["h", "v"].includes(direction)) throw new Error("invalid direction");
 
     // bounds check
-    if (r < 0 || c < 0 || r >= 10 || c >= 10) throw new Error("out of bounds");
-    if (direction === "h" && c + length > 10) throw new Error("out of bounds");
-    if (direction === "v" && r + length > 10) throw new Error("out of bounds");
+    if (r < 0 || c < 0 || r >= 10 || c >= 10)
+      throw new Error("placement, out of bounds");
+    if (direction === "h" && c + length > 10)
+      throw new Error("placement, out of bounds");
+    if (direction === "v" && r + length > 10)
+      throw new Error("placement, out of bounds");
 
     // overlap check
     const cells = [];
@@ -36,9 +44,30 @@ export class Gameboard {
   }
 
   receiveAttack([r, c]) {
+    // integer check
+    if (!Number.isInteger(r) || !Number.isInteger(c))
+      throw new Error("attack, must be integer");
+
+    if (r < 0 || c < 0 || r >= 10 || c >= 10)
+      // bounds check
+      throw new Error("attack, out of bounds");
+
+    // duplicate check
+    const key = `${r},${c}`;
+    if (this.attacks.has(key)) throw new Error("duplicate attack");
+    else this.attacks.add(key);
+
+    // miss
     const target = this.grid[r][c];
-    if (target === null) this.misses.push([r, c]);
-    else target.hit();
+    if (target === null) {
+      this.misses.push([r, c]);
+      return "miss";
+    }
+    // hit
+    else {
+      target.hit();
+      return "hit";
+    }
   }
 
   allSunk() {
