@@ -207,7 +207,7 @@ describe("Gameboard", () => {
     const board = new Gameboard();
     board.placeShip([0, 0], 2, "h");
     board.receiveAttack([0, 0]);
-    expect(() => board.receiveAttack([0, 0])).toThrow("duplicate attack");
+    expect(() => board.receiveAttack([0, 0])).toThrow("attack, duplicate");
   });
 
   it("ship (2), duplicate attack, miss check", () => {
@@ -215,7 +215,7 @@ describe("Gameboard", () => {
     board.placeShip([0, 0], 2, "h");
     board.receiveAttack([7, 7]);
     expect(board.misses).toEqual([[7, 7]]);
-    expect(() => board.receiveAttack([7, 7])).toThrow("duplicate attack");
+    expect(() => board.receiveAttack([7, 7])).toThrow("attack, duplicate");
     expect(board.misses).toEqual([[7, 7]]);
   });
 

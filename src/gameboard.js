@@ -1,5 +1,9 @@
 import { Ship } from "./ship.js";
 
+function attackKey([r, c]) {
+  return r * 10 + c;
+}
+
 export class Gameboard {
   constructor() {
     this.grid = Array.from({ length: 10 }, () => Array(10).fill(null));
@@ -54,8 +58,8 @@ export class Gameboard {
       throw new Error("attack, out of bounds");
 
     // duplicate check
-    const key = r * 10 + c;
-    if (this.attacks.has(key)) throw new Error("duplicate attack");
+    const key = attackKey([r, c]);
+    if (this.attacks.has(key)) throw new Error("attack, duplicate");
     else this.attacks.add(key);
 
     // miss
