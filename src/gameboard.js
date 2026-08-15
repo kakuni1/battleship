@@ -4,6 +4,7 @@ export class Gameboard {
   constructor() {
     this.grid = Array.from({ length: 10 }, () => Array(10).fill(null));
     this.ships = [];
+    this.hits = [];
     this.misses = [];
     this.attacks = new Set();
   }
@@ -53,7 +54,7 @@ export class Gameboard {
       throw new Error("attack, out of bounds");
 
     // duplicate check
-    const key = `${r},${c}`;
+    const key = r * 10 + c;
     if (this.attacks.has(key)) throw new Error("duplicate attack");
     else this.attacks.add(key);
 
@@ -66,6 +67,7 @@ export class Gameboard {
     // hit
     else {
       target.hit();
+      this.hits.push([r, c]);
       return "hit";
     }
   }

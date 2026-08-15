@@ -152,6 +152,31 @@ describe("Gameboard", () => {
     expect(board.misses).toEqual([]);
   });
 
+  it("hit (1), track the hit", () => {
+    const board = new Gameboard();
+    board.placeShip([0, 0], 2, "h");
+    board.receiveAttack([0, 0]);
+    expect(board.hits).toEqual([[0, 0]]);
+  });
+
+  it("miss (1), dont track", () => {
+    const board = new Gameboard();
+    board.placeShip([0, 0], 2, "h");
+    board.receiveAttack([5, 5]);
+    expect(board.hits).toEqual([]);
+  });
+
+  it("hits (2), track in order", () => {
+    const board = new Gameboard();
+    board.placeShip([0, 0], 2, "h");
+    board.receiveAttack([0, 0]);
+    board.receiveAttack([0, 1]);
+    expect(board.hits).toEqual([
+      [0, 0],
+      [0, 1],
+    ]);
+  });
+
   it("ships (2) & (5), not sunk, allSunk false", () => {
     const board = new Gameboard();
     board.placeShip([0, 0], 2, "h");
