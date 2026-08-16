@@ -236,4 +236,33 @@ describe("Gameboard", () => {
     board.placeShip([0, 0], 2, "h");
     expect(board.receiveAttack([0, 7])).toBe("miss");
   });
+
+  it("no attack, isAttacked false", () => {
+    const board = new Gameboard();
+    expect(board.isAttacked([0, 0])).toBe(false);
+  });
+
+  it("attack (1), isAttacked true", () => {
+    const board = new Gameboard();
+    board.receiveAttack([0, 0]);
+    expect(board.isAttacked([0, 0])).toBe(true);
+  });
+
+  it("ship (2), attack(1), isAttacked true", () => {
+    const board = new Gameboard();
+    board.placeShip([0, 0], 2, "h");
+    board.receiveAttack([0, 0]);
+    expect(board.isAttacked([0, 0])).toBe(true);
+    expect(board.isAttacked([0, 1])).toBe(false);
+  });
+
+  it("ship (2), attack (2), hit (1), miss (1), isAttacked true", () => {
+    const board = new Gameboard();
+    board.placeShip([0, 0], 2, "h");
+    board.receiveAttack([0, 0]);
+    board.receiveAttack([0, 5]);
+    expect(board.isAttacked([0, 0])).toBe(true);
+    expect(board.isAttacked([0, 5])).toBe(true);
+    expect(board.isAttacked([0, 1])).toBe(false);
+  });
 });

@@ -76,6 +76,12 @@ export class Gameboard {
     }
   }
 
+  // input an integer
+  isAttacked([r, c]) {
+    const key = attackKey([r, c]);
+    return this.attacks.has(key);
+  }
+
   allSunk() {
     return this.ships.every((ship) => ship.isSunk());
   }
