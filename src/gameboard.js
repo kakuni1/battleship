@@ -44,8 +44,8 @@ export class Gameboard {
       throw new Error("place, out of bounds");
     }
     if (
-      direction === "vertical"
-      && Math.floor(key / SIZE) + entry.length > SIZE
+      direction === "vertical" &&
+      Math.floor(key / SIZE) + entry.length > SIZE
     ) {
       throw new Error("place, out of bounds");
     }
