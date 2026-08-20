@@ -6,13 +6,29 @@ export const PlayerType = Object.freeze({
 });
 
 export class Player {
+  #gameboard;
+  #name;
+  #type;
+
   constructor(name, type = PlayerType.REAL) {
-    this.name = name ?? (type === PlayerType.REAL ? "Player A" : "cpu");
-    this.type = type;
-    this.gameboard = new Gameboard();
+    this.#gameboard = new Gameboard();
+    this.#name = name ?? (type === PlayerType.REAL ? "Player A" : "cpu");
+    this.#type = type;
   }
 
-  attack(enemy, [r, c]) {
-    return enemy.gameboard.receiveAttack([r, c]);
+  get gameboard() {
+    return this.#gameboard;
+  }
+
+  get name() {
+    return this.#name;
+  }
+
+  get type() {
+    return this.#type;
+  }
+
+  attack(enemy, key) {
+    return enemy.#gameboard.receiveAttack(key);
   }
 }
