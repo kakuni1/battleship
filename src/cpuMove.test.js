@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CpuMove } from "./cpu.js";
+import { CpuMove } from "./cpuMove.js";
 
 describe("CpuMove", () => {
   it("standard (100) length deck", () => {
