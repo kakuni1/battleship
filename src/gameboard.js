@@ -2,17 +2,16 @@ import { Ship } from "./ship.js";
 
 export const SIZE = 10;
 export const FLEET = Object.freeze([
-  Object.freeze({ name: "Destroyer", length: 2 }),
-  Object.freeze({ name: "Submarine", length: 3 }),
-  Object.freeze({ name: "Cruiser", length: 3 }),
-  Object.freeze({ name: "Battleship", length: 4 }),
   Object.freeze({ name: "Carrier", length: 5 }),
+  Object.freeze({ name: "Battleship", length: 4 }),
+  Object.freeze({ name: "Cruiser", length: 3 }),
+  Object.freeze({ name: "Submarine", length: 3 }),
+  Object.freeze({ name: "Destroyer", length: 2 }),
 ]);
 
 export class Gameboard {
   #attacks = new Set();
-  #placed = new Set();
-  #ships = [];
+  #ships = new Map();
 
   constructor() {
     this.grid = Array(SIZE * SIZE).fill(null);
@@ -29,7 +28,7 @@ export class Gameboard {
     if (entry === undefined) throw new Error("place, invalid ship name");
 
     // duplicate check
-    if (this.#placed.has(name)) throw new Error("place, ship already placed");
+    if (this.#ships.has(name)) throw new Error("place, ship already placed");
 
     // direction check
     if (!["horizontal", "vertical"].includes(direction)) {
@@ -64,9 +63,17 @@ export class Gameboard {
     for (const cell of cells) this.grid[cell] = ship;
 
     // return ship
-    this.#ships.push(ship);
-    this.#placed.add(name);
+    this.#ships.set(name, { ship, cells });
     return ship;
+  }
+
+  removeShip(name) {
+    if (this.#attacks.size > 0) throw new Error("remove, game already started");
+    if (!this.#ships.has(name)) throw new Error("remove, ship not yet placed");
+
+    const entry = this.#ships.get(name);
+    for (const cell of entry.cells) this.grid[cell] = null;
+    this.#ships.delete(name);
   }
 
   receiveAttack(key) {
@@ -98,10 +105,13 @@ export class Gameboard {
   }
 
   get allSunk() {
-    return this.#ships.length > 0 && this.#ships.every((ship) => ship.isSunk);
+    return (
+      this.#ships.size > 0 &&
+      this.#ships.values().every(({ ship }) => ship.isSunk)
+    );
   }
 
   get fleetDone() {
-    return this.#placed.size === FLEET.length;
+    return this.#ships.size === FLEET.length;
   }
 }

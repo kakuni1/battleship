@@ -289,8 +289,6 @@ describe("Gameboard", () => {
     expect(board.fleetDone).toBe(true);
   });
 
-  // new
-
   it("place ship (2), horizontal, edge fit, last cells of row, succeeds", () => {
     const board = new Gameboard();
     const ship = board.placeShip(8, "Destroyer", "horizontal");
@@ -304,10 +302,77 @@ describe("Gameboard", () => {
     );
   });
 
-  it("place ship (5), vertical, extends past bottom edge, throws", () => {
+  it("place ship (5), vertical, extends past bottom edge, throw error", () => {
     const board = new Gameboard();
     expect(() => board.placeShip(75, "Carrier", "vertical")).toThrow(
       "place, out of bounds",
+    );
+  });
+
+  it("remove ship (2) from grid, horizontal", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.removeShip("Destroyer");
+    for (const cell of [0, 1]) expect(board.grid[cell]).toBe(null);
+  });
+
+  it("remove ship (2) from grid, vertical", () => {
+    const board = new Gameboard();
+    board.placeShip(12, "Carrier", "vertical");
+    board.removeShip("Carrier");
+    for (const cell of [12, 22, 32, 42, 52])
+      expect(board.grid[cell]).toBe(null);
+  });
+
+  it("place same ship after removal", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.removeShip("Destroyer");
+    for (const cell of [0, 1]) expect(board.grid[cell]).toBe(null);
+    const ship = board.placeShip(0, "Destroyer", "horizontal");
+    for (const cell of [0, 1]) expect(board.grid[cell]).toBe(ship);
+  });
+
+  it("place different ship on removed cells", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.removeShip("Destroyer");
+    const ship = board.placeShip(0, "Carrier", "horizontal");
+    for (const cell of [0, 1, 2, 3, 4]) expect(board.grid[cell]).toBe(ship);
+  });
+
+  it("removal doesnt affect other ships", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    const ship = board.placeShip(55, "Submarine", "vertical");
+    board.removeShip("Destroyer");
+    for (const cell of [0, 1]) expect(board.grid[cell]).toBe(null);
+    board.placeShip(0, "Carrier", "vertical");
+    for (const cell of [55, 65, 75]) expect(board.grid[cell]).toBe(ship);
+  });
+
+  it("ship not placed, throw error", () => {
+    const board = new Gameboard();
+    expect(() => board.removeShip("Destroyer")).toThrow(
+      "remove, ship not yet placed",
+    );
+  });
+
+  it("cannot remove a ship after a miss", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(5);
+    expect(() => board.removeShip("Destroyer")).toThrow(
+      "remove, game already started",
+    );
+  });
+
+  it("cannot remove a ship after a hit", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    expect(() => board.removeShip("Destroyer")).toThrow(
+      "remove, game already started",
     );
   });
 });
