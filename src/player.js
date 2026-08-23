@@ -27,8 +27,4 @@ export class Player {
   get type() {
     return this.#type;
   }
-
-  attack(enemy, key) {
-    return enemy.#gameboard.receiveAttack(key);
-  }
 }
