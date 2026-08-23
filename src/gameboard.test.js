@@ -242,6 +242,17 @@ describe("Gameboard", () => {
     });
   });
 
+  it("ship (2), final hit, return sunk", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    expect(board.receiveAttack(1)).toEqual({
+      result: "hit",
+      name: "Destroyer",
+      sunk: true,
+    });
+  });
+
   it("no attack, isAttacked false", () => {
     const board = new Gameboard();
     expect(board.isAttacked(0)).toBe(false);
