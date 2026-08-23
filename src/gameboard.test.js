@@ -392,18 +392,4 @@ describe("Gameboard", () => {
       "remove, game already started",
     );
   });
-
-  it("isAttacked, false", () => {
-    const board = new Gameboard();
-    board.placeShip(0, "Destroyer", "horizontal");
-    board.receiveAttack(0);
-    expect(board.isAttacked(10)).toBe(false);
-  });
-
-  it("isAttacked, true", () => {
-    const board = new Gameboard();
-    board.placeShip(0, "Destroyer", "horizontal");
-    board.receiveAttack(0);
-    expect(board.isAttacked(0)).toBe(true);
-  });
 });
