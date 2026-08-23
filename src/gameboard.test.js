@@ -8,7 +8,7 @@ describe("Gameboard", () => {
     for (const cell of board.grid) expect(cell).toBe(null);
   });
 
-  it("integer check, non-integer thow error", () => {
+  it("integer check, non-integer throw error", () => {
     const board = new Gameboard();
     expect(() => board.placeShip([0, 1.1], "Destroyer", "horizontal")).toThrow(
       "place, must be integer",
