@@ -91,12 +91,14 @@ export class Gameboard {
     const target = this.grid[key];
     if (target === null) {
       this.misses.push(key);
-      return "miss";
+      return { result: "miss" };
     } // hit
     else {
       target.hit();
       this.hits.push(key);
-      return "hit";
+      for (const [name, entry] of this.#ships)
+        if (entry.ship === target)
+          return { result: "hit", name, sunk: target.isSunk };
     }
   }
 

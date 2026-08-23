@@ -38,14 +38,20 @@ describe("Player", () => {
     const me = new Player("a real player");
     const enemy = new Player(undefined, PlayerType.CPU);
     enemy.gameboard.placeShip(0, "Destroyer", "horizontal");
-    expect(me.attack(enemy, 0)).toBe("hit");
+    expect(me.attack(enemy, 0)).toEqual({
+      name: "Destroyer",
+      result: "hit",
+      sunk: false,
+    });
   });
 
   it("real player attack, returns 'miss'", () => {
     const me = new Player("a real player");
     const enemy = new Player(undefined, PlayerType.CPU);
     enemy.gameboard.placeShip(0, "Destroyer", "horizontal");
-    expect(me.attack(enemy, 55)).toBe("miss");
+    expect(me.attack(enemy, 55)).toEqual({
+      result: "miss",
+    });
   });
 
   it("real player attack, player (me) board untouched", () => {
