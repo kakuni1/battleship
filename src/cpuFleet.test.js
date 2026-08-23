@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { Gameboard } from "./gameboard.js";
 import { cpuPlaceFleet } from "./cpuFleet.js";
+import { Gameboard } from "./gameboard.js";
 
 describe("cpuFleet", () => {
   it("random cpu fleet placement, fleetDone true", () => {
