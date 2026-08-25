@@ -1,4 +1,4 @@
-import { SIZE } from "./gameboard.js";
+import { SIZE } from "./constants.js";
 import { shuffle } from "./shuffle.js";
 
 export class CpuMove {

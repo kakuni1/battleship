@@ -1,4 +1,4 @@
-import { FLEET, SIZE } from "./gameboard.js";
+import { FLEET, SIZE } from "./constants.js";
 import { shuffle } from "./shuffle.js";
 
 export function autoFleet(board, maxRestarts = 10) {
