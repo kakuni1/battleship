@@ -91,7 +91,7 @@ export class Gameboard {
     const target = this.grid[key];
     if (target === null) {
       this.misses.push(key);
-      return { result: "miss" };
+      return { result: "miss", name: null, sunk: false };
     } // hit
     else {
       target.hit();

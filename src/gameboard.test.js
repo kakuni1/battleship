@@ -239,6 +239,8 @@ describe("Gameboard", () => {
     board.placeShip(0, "Destroyer", "horizontal");
     expect(board.receiveAttack(7)).toEqual({
       result: "miss",
+      name: null,
+      sunk: false,
     });
   });
 
