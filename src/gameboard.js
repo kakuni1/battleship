@@ -113,6 +113,14 @@ export class Gameboard {
     );
   }
 
+  get fleetShips() {
+    return [...this.#ships].map(([name, { ship, cells }]) => ({
+      name,
+      cells: [...cells],
+      isSunk: ship.isSunk,
+    }));
+  }
+
   get fleetDone() {
     return this.#ships.size === FLEET.length;
   }

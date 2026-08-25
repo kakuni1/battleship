@@ -392,4 +392,24 @@ describe("Gameboard", () => {
       "remove, game already started",
     );
   });
+
+  it("getter fleetShips, returns name, cells & isSunk", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    board.receiveAttack(1);
+    expect(board.fleetShips).toEqual([
+      { name: "Destroyer", cells: [0, 1], isSunk: true },
+    ]);
+  });
+
+  it("getter fleetShips (multi-ship), returns name, cells & isSunk", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.placeShip(50, "Carrier", "horizontal");
+    expect(board.fleetShips).toEqual([
+      { name: "Destroyer", cells: [0, 1], isSunk: false },
+      { name: "Carrier", cells: [50, 51, 52, 53, 54], isSunk: false },
+    ]);
+  });
 });
