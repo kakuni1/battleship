@@ -113,6 +113,21 @@ export class Gameboard {
     );
   }
 
+  shipAt(key) {
+    // integer check
+    if (!Number.isInteger(key)) throw new Error("shipAt, must be integer");
+
+    // bounds check
+    if (key < 0 || key >= SIZE * SIZE) throw new Error("shipAt, out of bounds");
+
+    // empty check
+    const ship = this.grid[key];
+    if (ship === null) return null;
+
+    for (const [name, entry] of this.#ships)
+      if (entry.ship === ship) return { name, isSunk: ship.isSunk };
+  }
+
   get fleetShips() {
     return [...this.#ships].map(([name, { ship, cells }]) => ({
       name,

@@ -412,4 +412,12 @@ describe("Gameboard", () => {
       { name: "Carrier", cells: [50, 51, 52, 53, 54], isSunk: false },
     ]);
   });
+
+  it("shipAt, returns name & isSunk for a position", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    expect(board.shipAt(0)).toEqual({ name: "Destroyer", isSunk: false });
+    expect(board.shipAt(1)).toEqual({ name: "Destroyer", isSunk: false });
+    expect(board.shipAt(2)).toBeNull();
+  });
 });
