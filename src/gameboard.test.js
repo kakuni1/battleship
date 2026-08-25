@@ -284,6 +284,14 @@ describe("Gameboard", () => {
     expect(board.isAttacked(1)).toBe(false);
   });
 
+  it("isEmpty, empty cell true, occupied false", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    expect(board.isEmpty(0)).toBe(false);
+    expect(board.isEmpty(1)).toBe(false);
+    expect(board.isEmpty(2)).toBe(true);
+  });
+
   it("no ships placed, fleetDone false", () => {
     const board = new Gameboard();
     expect(board.fleetDone).toBe(false);

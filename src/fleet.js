@@ -65,5 +65,5 @@ function canCell(length) {
 
 function validCell(board, can) {
   // occupancy check
-  return can.cells.every((cell) => board.grid[cell] === null);
+  return can.cells.every((cell) => board.isEmpty(cell));
 }

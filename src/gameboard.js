@@ -98,6 +98,10 @@ export class Gameboard {
     return this.#attacks.has(key);
   }
 
+  isEmpty(key) {
+    return this.grid[key] === null;
+  }
+
   get allSunk() {
     return (
       this.#ships.size > 0 &&
