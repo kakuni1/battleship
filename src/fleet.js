@@ -1,14 +1,14 @@
 import { FLEET, SIZE } from "./gameboard.js";
 import { shuffle } from "./shuffle.js";
 
-export function cpuPlaceFleet(board, maxRestarts = 2) {
+export function autoFleet(board, maxRestarts = 10) {
   // retry with wiped board if stuck
   for (let attempt = 0; attempt < maxRestarts; attempt++)
-    if (placeFleet(board)) return board;
+    if (randomFleet(board)) return board;
   throw new Error("cpu fleet, multiple restarts, unable to place ships");
 }
 
-function placeFleet(board) {
+function randomFleet(board) {
   const placed = [];
 
   for (const { name, length } of FLEET) {
