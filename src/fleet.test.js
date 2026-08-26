@@ -12,15 +12,13 @@ describe("cpuFleet", () => {
   it("full fleet, (17) cells", () => {
     const board = new Gameboard();
     autoFleet(board);
-    expect(board.grid.filter((cell) => cell !== null).length).toBe(17);
+    expect(board.fleetShips.reduce((n, s) => n + s.cells.length, 0)).toBe(17);
   });
 
   it("unique ships (5)", () => {
     const board = new Gameboard();
     autoFleet(board);
-    const ships = new Set(board.grid);
-    ships.delete(null);
-    expect(ships.size).toBe(5);
+    expect(board.fleetShips.length).toBe(5);
   });
 
   it("new fleet, no hits or misses", () => {
@@ -35,7 +33,10 @@ describe("cpuFleet", () => {
     for (let i = 0; i < 10; i++) {
       const board = new Gameboard();
       autoFleet(board);
-      layouts.add(board.grid.map((cell) => (cell !== null ? 1 : 0)).join(""));
+      // mark occupied spots with a 1, rest are 0
+      const grid = Array(100).fill(0);
+      for (const s of board.fleetShips) for (const c of s.cells) grid[c] = 1;
+      layouts.add(grid);
     }
     expect(layouts.size).toBeGreaterThan(5);
   });

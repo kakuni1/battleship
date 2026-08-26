@@ -4,16 +4,16 @@ import { Ship } from "./ship.js";
 export class Gameboard {
   #attacks = new Set();
   #ships = new Map();
+  #grid;
 
   constructor() {
-    this.grid = Array(SIZE * SIZE).fill(null);
+    this.#grid = Array(SIZE * SIZE).fill(null);
     this.hits = [];
     this.misses = [];
   }
 
   placeShip(key, name, direction) {
-    // integer check
-    if (!Number.isInteger(key)) throw new Error("place, must be integer");
+    this.#validateKey(key, "place");
 
     // ship check
     const entry = FLEET.find((s) => s.name === name);
@@ -26,9 +26,6 @@ export class Gameboard {
     if (!["horizontal", "vertical"].includes(direction)) {
       throw new Error("place, invalid direction");
     }
-
-    // bounds check
-    if (key < 0 || key >= SIZE * SIZE) throw new Error("place, out of bounds");
 
     // wrap check
     if (direction === "horizontal" && (key % SIZE) + entry.length > SIZE) {
@@ -47,12 +44,12 @@ export class Gameboard {
       cells.push(direction === "horizontal" ? key + i : key + i * SIZE);
     }
     for (const cell of cells) {
-      if (this.grid[cell] !== null) throw new Error("place, cell occupied");
+      if (this.#grid[cell] !== null) throw new Error("place, cell occupied");
     }
 
     // valid ship position
     const ship = new Ship(entry.length);
-    for (const cell of cells) this.grid[cell] = ship;
+    for (const cell of cells) this.#grid[cell] = ship;
 
     // return ship
     this.#ships.set(name, { ship, cells });
@@ -64,7 +61,7 @@ export class Gameboard {
     if (!this.#ships.has(name)) throw new Error("remove, ship not yet placed");
 
     const entry = this.#ships.get(name);
-    for (const cell of entry.cells) this.grid[cell] = null;
+    for (const cell of entry.cells) this.#grid[cell] = null;
     this.#ships.delete(name);
   }
 
@@ -76,7 +73,7 @@ export class Gameboard {
     this.#attacks.add(key);
 
     // miss
-    const target = this.grid[key];
+    const target = this.#grid[key];
     if (target === null) {
       this.misses.push(key);
       return { result: "miss", name: null, sunk: false };
@@ -89,7 +86,6 @@ export class Gameboard {
           return { result: "hit", name, sunk: entry.ship.isSunk };
         }
       }
-      throw new Error("attack, ship not found");
     }
   }
 
@@ -98,7 +94,7 @@ export class Gameboard {
   }
 
   isEmpty(key) {
-    return this.grid[key] === null;
+    return this.#grid[key] === null;
   }
 
   get allSunk() {
@@ -112,7 +108,7 @@ export class Gameboard {
     this.#validateKey(key, "shipAt");
 
     // empty check
-    const ship = this.grid[key];
+    const ship = this.#grid[key];
     if (ship === null) return null;
 
     for (const [name, entry] of this.#ships)
