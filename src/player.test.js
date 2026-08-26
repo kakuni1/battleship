@@ -13,14 +13,14 @@ describe("Player", () => {
     expect(player.type).toBe(PlayerType.CPU);
   });
 
-  it("default name 'cpu'", () => {
+  it("default name 'computer'", () => {
     const player = new Player(undefined, PlayerType.CPU);
-    expect(player.name).toBe("cpu");
+    expect(player.name).toBe("Computer");
   });
 
-  it("default real player name, 'Player A'", () => {
+  it("default real player name, 'Player 1'", () => {
     const player = new Player();
-    expect(player.name).toBe("Player A");
+    expect(player.name).toBe("Player 1");
   });
 
   it("player owns gameboard instance", () => {
