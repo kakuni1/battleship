@@ -127,6 +127,11 @@ export class Gameboard {
     return this.#ships.size === FLEET.length;
   }
 
+  resetShips() {
+    this.#ships.clear();
+    this.#grid.fill(null);
+  }
+
   #validateKey(key, prefix) {
     if (!Number.isInteger(key)) throw new Error(`${prefix}, must be integer`);
     if (key < 0 || key >= SIZE * SIZE)

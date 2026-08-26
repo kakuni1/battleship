@@ -407,6 +407,14 @@ describe("Gameboard", () => {
     );
   });
 
+  it("reset ships, clear all", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.placeShip(10, "Carrier", "horizontal");
+    board.resetShips();
+    for (let key = 0; key < 100; key++) expect(board.isEmpty(key)).toBe(true);
+  });
+
   it("getter fleetShips, returns name, cells & isSunk", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
