@@ -86,11 +86,14 @@ export class Gameboard {
       return { result: "miss", name: null, sunk: false };
     } // hit
     else {
-      target.hit();
-      this.hits.push(key);
-      for (const [name, entry] of this.#ships)
-        if (entry.ship === target)
-          return { result: "hit", name, sunk: target.isSunk };
+      for (const [name, entry] of this.#ships) {
+        if (entry.ship === target) {
+          entry.ship.hit();
+          this.hits.push(key);
+          return { result: "hit", name, sunk: entry.ship.isSunk };
+        }
+      }
+      throw new Error("attack, ship not found");
     }
   }
 

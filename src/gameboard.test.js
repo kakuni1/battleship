@@ -255,6 +255,13 @@ describe("Gameboard", () => {
     });
   });
 
+  it("attack (1), ship not registered, throw error", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.grid[0] = {};
+    expect(() => board.receiveAttack(0)).toThrow("attack, ship not found");
+  });
+
   it("no attack, isAttacked false", () => {
     const board = new Gameboard();
     expect(board.isAttacked(0)).toBe(false);
