@@ -69,11 +69,7 @@ export class Gameboard {
   }
 
   receiveAttack(key) {
-    // integer check
-    if (!Number.isInteger(key)) throw new Error("attack, must be integer");
-
-    // bounds check
-    if (key < 0 || key >= SIZE * SIZE) throw new Error("attack, out of bounds");
+    this.#validateKey(key, "attack");
 
     // duplicate check
     if (this.#attacks.has(key)) throw new Error("attack, duplicate");
@@ -113,11 +109,7 @@ export class Gameboard {
   }
 
   shipAt(key) {
-    // integer check
-    if (!Number.isInteger(key)) throw new Error("shipAt, must be integer");
-
-    // bounds check
-    if (key < 0 || key >= SIZE * SIZE) throw new Error("shipAt, out of bounds");
+    this.#validateKey(key, "shipAt");
 
     // empty check
     const ship = this.grid[key];
@@ -137,5 +129,11 @@ export class Gameboard {
 
   get fleetDone() {
     return this.#ships.size === FLEET.length;
+  }
+
+  #validateKey(key, prefix) {
+    if (!Number.isInteger(key)) throw new Error(`${prefix}, must be integer`);
+    if (key < 0 || key >= SIZE * SIZE)
+      throw new Error(`${prefix}, out of bounds`);
   }
 }
