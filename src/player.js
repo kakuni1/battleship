@@ -12,7 +12,7 @@ export class Player {
 
   constructor(name, type = PlayerType.REAL) {
     this.#gameboard = new Gameboard();
-    this.#name = name ?? (type === PlayerType.REAL ? "Player A" : "cpu");
+    this.#name = name ?? (type === PlayerType.REAL ? "Player 1" : "Computer");
     this.#type = type;
   }
 
