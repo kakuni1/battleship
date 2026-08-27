@@ -18,10 +18,11 @@ export class GameController {
   constructor(
     playerOneName = "Player 1",
     playerTwoName = "Computer",
+    playerOneType = PlayerType.REAL,
     playerTwoType = PlayerType.CPU,
   ) {
     this.#players = [
-      new Player(playerOneName, PlayerType.REAL),
+      new Player(playerOneName, playerOneType),
       new Player(playerTwoName, playerTwoType),
     ];
     this.#activePlayer = 0;
