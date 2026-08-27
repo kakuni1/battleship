@@ -28,4 +28,28 @@ export class GameController {
     this.#winner = null;
     this.#cpuDeck = playerTwoType === PlayerType.CPU ? new CpuDeck() : null;
   }
+
+  getPlayer(index) {
+    return this.#players[index];
+  }
+
+  get activePlayer() {
+    return this.#activePlayer;
+  }
+
+  get opponentPlayer() {
+    return this.activePlayer === 0 ? 1 : 0;
+  }
+
+  get phase() {
+    return this.#phase;
+  }
+
+  get winner() {
+    return !this.#winner === null ? this.#winner : null;
+  }
+
+  get isGameOver() {
+    return this.#phase === gamePhase.GAMEOVER ? true : false;
+  }
 }
