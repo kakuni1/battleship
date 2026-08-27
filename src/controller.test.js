@@ -12,7 +12,7 @@ describe("GameController", () => {
 
   it("placeShip, through the controller", () => {
     const game = new GameController();
-    game.placeShip(0, "Destroyer", "horizontal");
+    game.placeShip(0, 0, "Destroyer", "horizontal");
     expect(game.getPlayer(0).gameboard.shipAt(0)).toEqual({
       isSunk: false,
       name: "Destroyer",

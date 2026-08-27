@@ -34,15 +34,11 @@ export class GameController {
     return this.#players[index];
   }
 
-  placeShip(key, name, direction) {
+  placeShip(index, key, name, direction) {
     if (this.#phase !== gamePhase.PLACE)
       throw new Error("controller placeShip, not in 'place' phase");
 
-    return this.getPlayer(this.activePlayer).gameboard.placeShip(
-      key,
-      name,
-      direction,
-    );
+    return this.getPlayer(index).gameboard.placeShip(key, name, direction);
   }
 
   autoPlace() {
