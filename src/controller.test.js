@@ -24,6 +24,13 @@ describe("GameController", () => {
     expect(game.getPlayer(0).gameboard.shipAt(2)).toBeNull();
   });
 
+  it("autoPlace, reset board & randomly place (5) ships", () => {
+    const game = new GameController();
+    game.autoPlace();
+    expect(game.getPlayer(0).gameboard.fleetDone).toBe(true);
+    expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(5);
+  });
+
   it("return, current phase", () => {
     const game = new GameController();
     expect(game.phase).toBe("place");
