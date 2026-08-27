@@ -10,6 +10,20 @@ describe("GameController", () => {
     expect(game.getPlayer(1).type).toBe("cpu");
   });
 
+  it("placeShip", () => {
+    const game = new GameController();
+    game.placeShip(0, "Destroyer", "horizontal");
+    expect(game.getPlayer(0).gameboard.shipAt(0)).toEqual({
+      isSunk: false,
+      name: "Destroyer",
+    });
+    expect(game.getPlayer(0).gameboard.shipAt(1)).toEqual({
+      isSunk: false,
+      name: "Destroyer",
+    });
+    expect(game.getPlayer(0).gameboard.shipAt(2)).toBeNull();
+  });
+
   it("return, current phase", () => {
     const game = new GameController();
     expect(game.phase).toBe("place");
