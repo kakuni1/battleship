@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GameController } from "./controller";
+import { GameController } from "./controller.js";
 
 describe("GameController", () => {
   it("return, player info", () => {
@@ -10,7 +10,7 @@ describe("GameController", () => {
     expect(game.getPlayer(1).type).toBe("cpu");
   });
 
-  it("placeShip", () => {
+  it("placeShip, through the controller", () => {
     const game = new GameController();
     game.placeShip(0, "Destroyer", "horizontal");
     expect(game.getPlayer(0).gameboard.shipAt(0)).toEqual({

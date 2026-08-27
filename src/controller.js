@@ -1,5 +1,6 @@
-import { CpuDeck } from "./move";
-import { Player, PlayerType } from "./player";
+import { autoFleet } from "./fleet.js";
+import { CpuDeck } from "./move.js";
+import { Player, PlayerType } from "./player.js";
 
 export const gamePhase = Object.freeze({
   PLACE: "place",
@@ -37,7 +38,7 @@ export class GameController {
     if (this.#phase !== gamePhase.PLACE)
       throw new Error("controller placeShip, not in 'place' phase");
 
-    return this.#players[this.activePlayer].gameboard.placeShip(
+    return this.getPlayer(this.activePlayer).gameboard.placeShip(
       key,
       name,
       direction,
