@@ -41,11 +41,11 @@ export class GameController {
     return this.getPlayer(index).gameboard.placeShip(key, name, direction);
   }
 
-  autoPlace() {
+  autoPlace(index) {
     if (this.#phase !== gamePhase.PLACE)
       throw new Error("controller placeShip, not in 'place' phase");
 
-    const board = this.getPlayer(this.activePlayer).gameboard;
+    const board = this.getPlayer(index).gameboard;
     board.resetShips();
     return autoFleet(board);
   }

@@ -26,7 +26,7 @@ describe("GameController", () => {
 
   it("autoPlace, reset board & randomly place (5) ships", () => {
     const game = new GameController();
-    game.autoPlace();
+    game.autoPlace(0);
     expect(game.getPlayer(0).gameboard.fleetDone).toBe(true);
     expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(5);
   });
