@@ -67,7 +67,7 @@ export class GameController {
   }
 
   get winner() {
-    return this.#winner === null ? this.#winner : null;
+    return this.#winner;
   }
 
   get isGameOver() {
