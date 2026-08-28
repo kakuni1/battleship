@@ -55,12 +55,15 @@ export class GameController {
     if (this.phase !== gamePhase.PLACE)
       throw new Error("controller start game, not in 'place' phase");
 
-    const a = this.#players[this.activePlayer];
-    const b = this.#players[this.opponentPlayer];
+    const active = this.#players[this.activePlayer];
+    const opponent = this.#players[this.opponentPlayer];
 
-    if (a.type === PlayerType.CPU) this.autoPlace(this.activePlayer);
-    if (b.type === PlayerType.CPU) this.autoPlace(this.opponentPlayer);
-    if (a.gameboard.fleetDone !== true || b.gameboard.fleetDone !== true)
+    if (active.type === PlayerType.CPU) this.autoPlace(this.activePlayer);
+    if (opponent.type === PlayerType.CPU) this.autoPlace(this.opponentPlayer);
+    if (
+      active.gameboard.fleetDone !== true ||
+      opponent.gameboard.fleetDone !== true
+    )
       throw new Error("controller start game, fleets not yet fully placed");
 
     this.#phase = gamePhase.PLAY;
