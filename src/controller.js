@@ -86,6 +86,6 @@ export class GameController {
   }
 
   get isGameOver() {
-    return this.#phase === gamePhase.GAMEOVER ? true : false;
+    return this.#phase === gamePhase.GAMEOVER;
   }
 }
