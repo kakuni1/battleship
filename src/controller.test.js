@@ -104,26 +104,26 @@ describe("GameController", () => {
     expect(game.phase).toBe("play");
   });
 
-  it("playRealTurn, not in phase 'play', throw error", () => {
+  it("playTurn, not in phase 'play', throw error", () => {
     const game = new GameController();
-    expect(() => game.playRealTurn(0)).toThrow(
-      "controller real player turn, must be in phase 'play'",
+    expect(() => game.playTurn(0)).toThrow(
+      "controller process turn, must be in phase 'play'",
     );
   });
 
-  it("playRealTurn, not for 'cpu', throw error", () => {
+  it("playTurn, not for 'cpu', throw error", () => {
     const game = new GameController(
       "Computer 1",
       "Computer 2",
       PlayerType.CPU,
       PlayerType.CPU,
     );
-    expect(() => game.playRealTurn(0)).toThrow(
-      "controller real player turn, must be in phase 'play'",
+    expect(() => game.playTurn(0)).toThrow(
+      "controller process turn, must be in phase 'play'",
     );
   });
 
-  it("playRealTurn, win ends game", () => {
+  it("playTurn, win ends game", () => {
     const game = new GameController(
       "Alice",
       "Bob",
@@ -141,39 +141,39 @@ describe("GameController", () => {
     game.placeShip(1, 30, "Submarine", "horizontal");
     game.placeShip(1, 40, "Destroyer", "horizontal");
     game.startGame();
-    game.playRealTurn(0);
-    game.playRealTurn(0);
-    game.playRealTurn(1);
-    game.playRealTurn(1);
-    game.playRealTurn(2);
-    game.playRealTurn(2);
-    game.playRealTurn(3);
-    game.playRealTurn(3);
-    game.playRealTurn(4);
-    game.playRealTurn(4);
-    game.playRealTurn(10);
-    game.playRealTurn(10);
-    game.playRealTurn(11);
-    game.playRealTurn(11);
-    game.playRealTurn(12);
-    game.playRealTurn(12);
-    game.playRealTurn(13);
-    game.playRealTurn(13);
-    game.playRealTurn(20);
-    game.playRealTurn(20);
-    game.playRealTurn(21);
-    game.playRealTurn(21);
-    game.playRealTurn(22);
-    game.playRealTurn(22);
-    game.playRealTurn(30);
-    game.playRealTurn(30);
-    game.playRealTurn(31);
-    game.playRealTurn(31);
-    game.playRealTurn(32);
-    game.playRealTurn(32);
-    game.playRealTurn(40);
-    game.playRealTurn(40);
-    const final = game.playRealTurn(41);
+    game.playTurn(0);
+    game.playTurn(0);
+    game.playTurn(1);
+    game.playTurn(1);
+    game.playTurn(2);
+    game.playTurn(2);
+    game.playTurn(3);
+    game.playTurn(3);
+    game.playTurn(4);
+    game.playTurn(4);
+    game.playTurn(10);
+    game.playTurn(10);
+    game.playTurn(11);
+    game.playTurn(11);
+    game.playTurn(12);
+    game.playTurn(12);
+    game.playTurn(13);
+    game.playTurn(13);
+    game.playTurn(20);
+    game.playTurn(20);
+    game.playTurn(21);
+    game.playTurn(21);
+    game.playTurn(22);
+    game.playTurn(22);
+    game.playTurn(30);
+    game.playTurn(30);
+    game.playTurn(31);
+    game.playTurn(31);
+    game.playTurn(32);
+    game.playTurn(32);
+    game.playTurn(40);
+    game.playTurn(40);
+    const final = game.playTurn(41);
     expect(final.result).toBe("hit");
     expect(final.sunk).toBe(true);
     expect(final.winner).toBe(0);
@@ -183,7 +183,7 @@ describe("GameController", () => {
     expect(game.isGameOver).toBe(true);
   });
 
-  it("playRealTurn, win ends game", () => {
+  it("playTurn, win ends game", () => {
     const game = new GameController(
       "Alice",
       "Bob",
@@ -201,41 +201,41 @@ describe("GameController", () => {
     game.placeShip(1, 30, "Submarine", "horizontal");
     game.placeShip(1, 40, "Destroyer", "horizontal");
     game.startGame();
-    game.playRealTurn(0);
-    game.playRealTurn(0);
-    game.playRealTurn(1);
-    game.playRealTurn(1);
-    game.playRealTurn(2);
-    game.playRealTurn(2);
-    game.playRealTurn(3);
-    game.playRealTurn(3);
-    game.playRealTurn(4);
-    game.playRealTurn(4);
-    game.playRealTurn(10);
-    game.playRealTurn(10);
-    game.playRealTurn(11);
-    game.playRealTurn(11);
-    game.playRealTurn(12);
-    game.playRealTurn(12);
-    game.playRealTurn(13);
-    game.playRealTurn(13);
-    game.playRealTurn(20);
-    game.playRealTurn(20);
-    game.playRealTurn(21);
-    game.playRealTurn(21);
-    game.playRealTurn(22);
-    game.playRealTurn(22);
-    game.playRealTurn(30);
-    game.playRealTurn(30);
-    game.playRealTurn(31);
-    game.playRealTurn(31);
-    game.playRealTurn(32);
-    game.playRealTurn(32);
-    game.playRealTurn(40);
-    game.playRealTurn(40);
-    game.playRealTurn(41);
-    expect(() => game.playRealTurn(41)).toThrow(
-      "controller real player turn, must be in phase 'play'",
+    game.playTurn(0);
+    game.playTurn(0);
+    game.playTurn(1);
+    game.playTurn(1);
+    game.playTurn(2);
+    game.playTurn(2);
+    game.playTurn(3);
+    game.playTurn(3);
+    game.playTurn(4);
+    game.playTurn(4);
+    game.playTurn(10);
+    game.playTurn(10);
+    game.playTurn(11);
+    game.playTurn(11);
+    game.playTurn(12);
+    game.playTurn(12);
+    game.playTurn(13);
+    game.playTurn(13);
+    game.playTurn(20);
+    game.playTurn(20);
+    game.playTurn(21);
+    game.playTurn(21);
+    game.playTurn(22);
+    game.playTurn(22);
+    game.playTurn(30);
+    game.playTurn(30);
+    game.playTurn(31);
+    game.playTurn(31);
+    game.playTurn(32);
+    game.playTurn(32);
+    game.playTurn(40);
+    game.playTurn(40);
+    game.playTurn(41);
+    expect(() => game.playTurn(41)).toThrow(
+      "controller process turn, must be in phase 'play'",
     );
   });
 
