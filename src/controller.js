@@ -31,10 +31,6 @@ export class GameController {
     this.#cpuDeck = playerTwoType === PlayerType.CPU ? new CpuDeck() : null;
   }
 
-  getPlayer(index) {
-    return this.#players[index];
-  }
-
   placeShip(index, key, name, direction) {
     if (this.phase !== gamePhase.PLACE)
       throw new Error("controller placeShip, not in 'place' phase");
@@ -55,8 +51,8 @@ export class GameController {
     if (this.phase !== gamePhase.PLACE)
       throw new Error("controller start game, not in 'place' phase");
 
-    const active = this.#players[this.activePlayer];
-    const opponent = this.#players[this.opponentPlayer];
+    const active = this.getPlayer(this.activePlayer);
+    const opponent = this.getPlayer(this.opponentPlayer);
 
     if (active.type === PlayerType.CPU) this.autoPlace(this.activePlayer);
     if (opponent.type === PlayerType.CPU) this.autoPlace(this.opponentPlayer);
@@ -67,6 +63,10 @@ export class GameController {
       throw new Error("controller start game, fleets not yet fully placed");
 
     this.#phase = gamePhase.PLAY;
+  }
+
+  getPlayer(index) {
+    return this.#players[index];
   }
 
   get activePlayer() {
