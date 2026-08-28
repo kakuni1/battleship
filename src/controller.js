@@ -104,6 +104,18 @@ export class GameController {
     return this.#players[index];
   }
 
+  resetGame() {
+    this.#activePlayer = 0;
+    this.#players = [
+      new Player(this.#players[0].name, this.#players[0].type),
+      new Player(this.#players[1].name, this.#players[1].type),
+    ];
+    this.#cpuDeck =
+      this.#players[1].type === PlayerType.CPU ? new CpuDeck() : null;
+    this.#phase = gamePhase.PLACE;
+    this.#winner = null;
+  }
+
   get activePlayer() {
     return this.#activePlayer;
   }

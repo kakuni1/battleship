@@ -239,6 +239,33 @@ describe("GameController", () => {
     );
   });
 
+  it("reset game", () => {
+    const game = new GameController(
+      "Alice",
+      "Bob",
+      PlayerType.REAL,
+      PlayerType.REAL,
+    );
+    game.autoPlace(0);
+    game.autoPlace(1);
+    game.startGame();
+    game.playTurn(0);
+    game.resetGame();
+    expect(game.phase).toBe("place");
+    expect(game.activePlayer).toBe(0);
+    expect(game.opponentPlayer).toBe(1);
+    expect(game.winner).toBeNull();
+    expect(game.isGameOver).toBe(false);
+    expect(game.getPlayer(0).name).toBe("Alice");
+    expect(game.getPlayer(0).type).toBe("real");
+    expect(game.getPlayer(0).gameboard.fleetDone).toBe(false);
+    expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(0);
+    expect(game.getPlayer(1).name).toBe("Bob");
+    expect(game.getPlayer(1).type).toBe("real");
+    expect(game.getPlayer(1).gameboard.fleetDone).toBe(false);
+    expect(game.getPlayer(1).gameboard.fleetShips.length).toBe(0);
+  });
+
   it("return, current phase", () => {
     const game = new GameController();
     expect(game.phase).toBe("place");
