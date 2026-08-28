@@ -65,6 +65,36 @@ export class GameController {
     this.#phase = gamePhase.PLAY;
   }
 
+  playRealTurn(key) {
+    if (this.phase !== gamePhase.PLAY)
+      throw new Error("controller real player turn, must be in phase 'play'");
+    if (this.getPlayer(this.activePlayer).type !== PlayerType.REAL)
+      throw new Error(
+        "controller real player turn, must be player type 'real'",
+      );
+
+    const attacker = this.activePlayer;
+    const opponent = this.getPlayer(this.opponentPlayer);
+
+    const result = opponent.gameboard.receiveAttack(key);
+    // end game or swap players & continue game
+    if (opponent.gameboard.allSunk === true) {
+      this.#winner = this.activePlayer;
+      this.#phase = gamePhase.GAMEOVER;
+    } else this.#activePlayer = this.opponentPlayer;
+
+    return {
+      success: true,
+      attacker,
+      key,
+      result: result.result,
+      ship: result.name,
+      sunk: result.sunk,
+      gameover: this.isGameOver,
+      winner: this.winner,
+    };
+  }
+
   getPlayer(index) {
     return this.#players[index];
   }
