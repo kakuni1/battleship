@@ -36,14 +36,14 @@ export class GameController {
   }
 
   placeShip(index, key, name, direction) {
-    if (this.#phase !== gamePhase.PLACE)
+    if (this.phase !== gamePhase.PLACE)
       throw new Error("controller placeShip, not in 'place' phase");
 
     return this.getPlayer(index).gameboard.placeShip(key, name, direction);
   }
 
   autoPlace(index) {
-    if (this.#phase !== gamePhase.PLACE)
+    if (this.phase !== gamePhase.PLACE)
       throw new Error("controller autoPlace, not in 'place' phase");
 
     const board = this.getPlayer(index).gameboard;
@@ -52,7 +52,7 @@ export class GameController {
   }
 
   startGame() {
-    if (this.#phase !== gamePhase.PLACE)
+    if (this.phase !== gamePhase.PLACE)
       throw new Error("controller start game, not in 'place' phase");
 
     const a = this.#players[this.activePlayer];
