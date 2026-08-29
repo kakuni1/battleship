@@ -78,16 +78,11 @@ export class GameController {
 
     const attacker = this.activePlayer;
     const opponent = this.getPlayer(this.opponentPlayer);
-    let targetKey = key;
-    let result;
-
-    if (this.getPlayer(this.activePlayer).type === PlayerType.REAL) {
-      result = opponent.gameboard.receiveAttack(key);
-    }
-    if (this.getPlayer(this.activePlayer).type === PlayerType.CPU) {
-      const targetKey = this.#cpuDeck.next();
-      result = opponent.gameboard.receiveAttack(targetKey);
-    }
+    const targetKey =
+      this.getPlayer(this.activePlayer).type === PlayerType.CPU
+        ? this.#cpuDeck.next()
+        : key;
+    const result = opponent.gameboard.receiveAttack(targetKey);
 
     // end game or swap players & continue game
     if (opponent.gameboard.allSunk === true) {
