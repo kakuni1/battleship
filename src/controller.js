@@ -28,7 +28,10 @@ export class GameController {
     this.#activePlayer = 0;
     this.#phase = gamePhase.PLACE;
     this.#winner = null;
-    this.#cpuDeck = playerTwoType === PlayerType.CPU ? new CpuDeck() : null;
+    this.#cpuDeck = [
+      playerOneType === PlayerType.CPU ? new CpuDeck() : null,
+      playerTwoType === PlayerType.CPU ? new CpuDeck() : null,
+    ];
   }
 
   placeShip(index, key, name, direction) {
@@ -112,8 +115,10 @@ export class GameController {
       new Player(this.#players[0].name, this.#players[0].type),
       new Player(this.#players[1].name, this.#players[1].type),
     ];
-    this.#cpuDeck =
-      this.#players[1].type === PlayerType.CPU ? new CpuDeck() : null;
+    this.#cpuDeck = [
+      this.#players[0].type === PlayerType.CPU ? new CpuDeck() : null,
+      this.#players[1].type === PlayerType.CPU ? new CpuDeck() : null,
+    ];
     this.#phase = gamePhase.PLACE;
     this.#winner = null;
   }

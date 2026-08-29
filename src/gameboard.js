@@ -4,12 +4,14 @@ import { Ship } from "./ship.js";
 export class Gameboard {
   #attacks = new Set();
   #ships = new Map();
+  #hits;
+  #misses;
   #grid;
 
   constructor() {
     this.#grid = Array(SIZE * SIZE).fill(null);
-    this.hits = [];
-    this.misses = [];
+    this.#hits = [];
+    this.#misses = [];
   }
 
   placeShip(key, name, direction) {
@@ -125,6 +127,14 @@ export class Gameboard {
 
   get fleetDone() {
     return this.#ships.size === FLEET.length;
+  }
+
+  get hits() {
+    return [...this.#hits];
+  }
+
+  get misses() {
+    return [...this.#misses];
   }
 
   resetShips() {
