@@ -25,6 +25,27 @@ describe("GameController", () => {
     expect(game.getPlayer(0).gameboard.shipAt(2)).toBeNull();
   });
 
+  it("removeShip, through the controller", () => {
+    const game = new GameController();
+    game.placeShip(0, 0, "Destroyer", "horizontal");
+    expect(game.getPlayer(0).gameboard.shipAt(0)).toEqual({
+      isSunk: false,
+      name: "Destroyer",
+    });
+    game.removeShip(0, "Destroyer");
+    expect(game.getPlayer(0).gameboard.shipAt(0)).toBeNull();
+    expect(game.getPlayer(0).gameboard.shipAt(1)).toBeNull();
+  });
+
+  it("removeShip, not in 'place' phase, throw error", () => {
+    const game = new GameController();
+    game.autoPlace(0);
+    game.startGame();
+    expect(() => game.removeShip(0, "Destroyer")).toThrow(
+      "controller removeShip, not in 'place' phase",
+    );
+  });
+``
   it("autoPlace, reset board & randomly place (5) ships", () => {
     const game = new GameController();
     game.autoPlace(0);
