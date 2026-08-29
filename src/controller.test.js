@@ -45,7 +45,7 @@ describe("GameController", () => {
       "controller removeShip, not in 'place' phase",
     );
   });
-``
+
   it("autoPlace, reset board & randomly place (5) ships", () => {
     const game = new GameController();
     game.autoPlace(0);
@@ -258,6 +258,31 @@ describe("GameController", () => {
     expect(() => game.playTurn(41)).toThrow(
       "controller process turn, must be in phase 'play'",
     );
+  });
+
+  it("playTurn, alternate 'real' & 'cpu' turns", () => {
+    const game = new GameController(
+      "Player 1",
+      "Computer",
+      PlayerType.REAL,
+      PlayerType.CPU,
+    );
+    game.autoPlace(0);
+    game.startGame();
+
+    const realTurn = game.playTurn(0);
+    expect(realTurn.attacker).toBe(0);
+    expect(realTurn.targetKey).toBe(0);
+    expect(realTurn.success).toBe(true);
+    expect(game.activePlayer).toBe(1);
+
+    const cpuTurn = game.playTurn(0);
+    expect(cpuTurn.attacker).toBe(1);
+    expect(Number.isInteger(cpuTurn.targetKey)).toBe(true);
+    expect(cpuTurn.targetKey).toBeGreaterThanOrEqual(0);
+    expect(cpuTurn.targetKey).toBeLessThanOrEqual(99);
+    expect(cpuTurn.success).toBe(true);
+    expect(game.activePlayer).toBe(0);
   });
 
   it("reset game", () => {
