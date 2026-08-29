@@ -38,6 +38,13 @@ export class GameController {
     return this.getPlayer(index).gameboard.placeShip(key, name, direction);
   }
 
+  removeShip(index, key, name, direction) {
+    if (this.phase !== gamePhase.PLACE)
+      throw new Error("controller removeShip, not in 'place' phase");
+
+    return this.getPlayer(index).gameboard.removeShip(key, name, direction);
+  }
+
   autoPlace(index) {
     if (this.phase !== gamePhase.PLACE)
       throw new Error("controller autoPlace, not in 'place' phase");
