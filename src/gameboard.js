@@ -142,6 +142,8 @@ export class Gameboard {
   }
 
   reset() {
+    if (this.#attacks.size > 0) throw new Error("reset, game already started");
+
     this.#ships.clear();
     this.#grid.fill(null);
     this.#attacks.clear();
