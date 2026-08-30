@@ -130,7 +130,7 @@ export class Gameboard {
   }
 
   get attacks() {
-    return this.#attacks;
+    return new Set(this.#attacks);
   }
 
   get hits() {
