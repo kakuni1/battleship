@@ -18,7 +18,7 @@ function randomFleet(board) {
 
     // wipe board if unsuccessful
     if (pick === undefined) {
-      board.resetShips();
+      board.reset();
       return false;
     }
 

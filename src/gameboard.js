@@ -141,7 +141,7 @@ export class Gameboard {
     return [...this.#misses];
   }
 
-  resetShips() {
+  reset() {
     this.#ships.clear();
     this.#grid.fill(null);
     this.#attacks.clear();
