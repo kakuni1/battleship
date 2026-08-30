@@ -82,8 +82,8 @@ export class GameController {
     const attacker = this.activePlayer;
     const opponent = this.getPlayer(this.opponentPlayer);
     const targetKey =
-      this.getPlayer(this.activePlayer).type === PlayerType.CPU
-        ? this.#cpuDeck.next()
+      this.getPlayer(attacker).type === PlayerType.CPU
+        ? this.#cpuDeck[attacker].next()
         : key;
     const result = opponent.gameboard.receiveAttack(targetKey);
 

@@ -77,14 +77,14 @@ export class Gameboard {
     // miss
     const target = this.#grid[key];
     if (target === null) {
-      this.misses.push(key);
+      this.#misses.push(key);
       return { result: "miss", name: null, sunk: false };
     } // hit
     else {
       for (const [name, entry] of this.#ships) {
         if (entry.ship === target) {
           entry.ship.hit();
-          this.hits.push(key);
+          this.#hits.push(key);
           return { result: "hit", name, sunk: entry.ship.isSunk };
         }
       }
