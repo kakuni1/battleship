@@ -132,7 +132,7 @@ describe("GameController", () => {
     );
   });
 
-  it("playTurn, game not started', throw error", () => {
+  it("playTurn, game not started, throw error", () => {
     const game = new GameController(
       "Computer 1",
       "Computer 2",

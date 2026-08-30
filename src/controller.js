@@ -100,7 +100,7 @@ export class GameController {
       result: result.result,
       ship: result.name,
       sunk: result.sunk,
-      gameover: this.isGameOver,
+      gameOver: this.isGameOver,
       winner: this.winner,
     };
   }
