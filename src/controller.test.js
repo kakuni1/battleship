@@ -306,10 +306,16 @@ describe("GameController", () => {
     expect(game.getPlayer(0).type).toBe("real");
     expect(game.getPlayer(0).gameboard.fleetDone).toBe(false);
     expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(0);
+    expect(game.getPlayer(0).gameboard.attacks).toEqual(new Set());
+    expect(game.getPlayer(0).gameboard.hits).toEqual([]);
+    expect(game.getPlayer(0).gameboard.misses).toEqual([]);
     expect(game.getPlayer(1).name).toBe("Bob");
     expect(game.getPlayer(1).type).toBe("real");
     expect(game.getPlayer(1).gameboard.fleetDone).toBe(false);
     expect(game.getPlayer(1).gameboard.fleetShips.length).toBe(0);
+    expect(game.getPlayer(1).gameboard.attacks).toEqual(new Set());
+    expect(game.getPlayer(1).gameboard.hits).toEqual([]);
+    expect(game.getPlayer(1).gameboard.misses).toEqual([]);
   });
 
   it("return, current phase", () => {

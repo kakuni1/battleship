@@ -129,6 +129,10 @@ export class Gameboard {
     return this.#ships.size === FLEET.length;
   }
 
+  get attacks() {
+    return this.#attacks;
+  }
+
   get hits() {
     return [...this.#hits];
   }
@@ -140,6 +144,9 @@ export class Gameboard {
   resetShips() {
     this.#ships.clear();
     this.#grid.fill(null);
+    this.#attacks.clear();
+    this.#hits = [];
+    this.#misses = [];
   }
 
   #validateKey(key, prefix) {
