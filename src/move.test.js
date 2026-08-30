@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { CpuDeck } from "./move.js";
 
-describe("CpuMove", () => {
+describe("CpuDeck", () => {
   it("standard (100) length deck", () => {
     expect(new CpuDeck().size).toBe(100);
   });

@@ -132,7 +132,7 @@ describe("GameController", () => {
     );
   });
 
-  it("playTurn, not for 'cpu', throw error", () => {
+  it("playTurn, game not started', throw error", () => {
     const game = new GameController(
       "Computer 1",
       "Computer 2",
@@ -204,7 +204,7 @@ describe("GameController", () => {
     expect(game.isGameOver).toBe(true);
   });
 
-  it("playTurn, win ends game", () => {
+  it("playTurn, turn after game ends, throw error", () => {
     const game = new GameController(
       "Alice",
       "Bob",
