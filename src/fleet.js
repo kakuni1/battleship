@@ -9,8 +9,6 @@ export function autoFleet(board, maxRestarts = 10) {
 }
 
 function randomFleet(board) {
-  const placed = [];
-
   for (const { name, length } of FLEET) {
     // shuffle the generated placements
     const cans = canCell(length).filter((can) => validCell(board, can));
@@ -23,7 +21,6 @@ function randomFleet(board) {
     }
 
     board.placeShip(pick.key, name, pick.direction);
-    placed.push(name);
   }
 
   return true;
