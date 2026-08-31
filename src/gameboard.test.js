@@ -389,7 +389,7 @@ describe("Gameboard", () => {
     );
   });
 
-  it("cannot remove a ship after a miss", () => {
+  it("cannot remove a ship after a miss, throw error", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(5);
@@ -398,13 +398,36 @@ describe("Gameboard", () => {
     );
   });
 
-  it("cannot remove a ship after a hit", () => {
+  it("cannot remove a ship after a hit, throw error", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(0);
     expect(() => board.removeShip("Destroyer")).toThrow(
       "remove, game already started",
     );
+  });
+
+  it("cannot reset after a miss, throw error", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(5);
+    expect(() => board.reset()).toThrow("reset, game already started");
+  });
+
+  it("cannot reset after a hit (game start), throw error", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    expect(() => board.reset()).toThrow("reset, game already started");
+  });
+
+  it("reset still allowed after removeShip", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.placeShip(10, "Carrier", "horizontal");
+    board.removeShip("Carrier");
+    board.reset();
+    expect(board.fleetShips).toEqual([]);
   });
 
   it("reset, clear all", () => {

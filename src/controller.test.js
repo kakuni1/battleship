@@ -198,7 +198,7 @@ describe("GameController", () => {
     expect(final.result).toBe("hit");
     expect(final.sunk).toBe(true);
     expect(final.winner).toBe(0);
-    expect(final.gameover).toBe(true);
+    expect(final.gameOver).toBe(true);
     expect(game.winner).toBe(0);
     expect(game.phase).toBe("gameOver");
     expect(game.isGameOver).toBe(true);
