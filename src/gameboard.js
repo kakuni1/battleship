@@ -115,6 +115,8 @@ export class Gameboard {
 
     for (const [name, entry] of this.#ships)
       if (entry.ship === ship) return { name, isSunk: ship.isSunk };
+
+    return null;
   }
 
   get fleetShips() {

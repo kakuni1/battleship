@@ -273,7 +273,6 @@ describe("GameController", () => {
     const realTurn = game.playTurn(0);
     expect(realTurn.attacker).toBe(0);
     expect(realTurn.targetKey).toBe(0);
-    expect(realTurn.success).toBe(true);
     expect(game.activePlayer).toBe(1);
 
     const cpuTurn = game.playTurn(0);
@@ -281,7 +280,6 @@ describe("GameController", () => {
     expect(Number.isInteger(cpuTurn.targetKey)).toBe(true);
     expect(cpuTurn.targetKey).toBeGreaterThanOrEqual(0);
     expect(cpuTurn.targetKey).toBeLessThanOrEqual(99);
-    expect(cpuTurn.success).toBe(true);
     expect(game.activePlayer).toBe(0);
   });
 

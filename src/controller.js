@@ -94,7 +94,6 @@ export class GameController {
     } else this.#activePlayer = this.opponentPlayer;
 
     return {
-      success: true,
       attacker,
       targetKey,
       result: result.result,
