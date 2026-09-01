@@ -1,7 +1,7 @@
 import { SIZE } from "./constants.js";
 import { shuffle } from "./shuffle.js";
 
-export class CpuDeck {
+export class Deck {
   #deck;
 
   constructor(size = SIZE * SIZE) {

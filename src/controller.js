@@ -1,5 +1,5 @@
 import { autoFleet } from "./fleet.js";
-import { CpuDeck } from "./move.js";
+import { Deck } from "./cpu.js";
 import { Player, PlayerType } from "./player.js";
 
 export const gamePhase = Object.freeze({
@@ -29,8 +29,8 @@ export class GameController {
     this.#phase = gamePhase.PLACE;
     this.#winner = null;
     this.#cpuDeck = [
-      playerOneType === PlayerType.CPU ? new CpuDeck() : null,
-      playerTwoType === PlayerType.CPU ? new CpuDeck() : null,
+      playerOneType === PlayerType.CPU ? new Deck() : null,
+      playerTwoType === PlayerType.CPU ? new Deck() : null,
     ];
   }
 
@@ -115,8 +115,8 @@ export class GameController {
       new Player(this.#players[1].name, this.#players[1].type),
     ];
     this.#cpuDeck = [
-      this.#players[0].type === PlayerType.CPU ? new CpuDeck() : null,
-      this.#players[1].type === PlayerType.CPU ? new CpuDeck() : null,
+      this.#players[0].type === PlayerType.CPU ? new Deck() : null,
+      this.#players[1].type === PlayerType.CPU ? new Deck() : null,
     ];
     this.#phase = gamePhase.PLACE;
     this.#winner = null;
