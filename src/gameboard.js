@@ -79,7 +79,9 @@ export class Gameboard {
     if (target === null) {
       this.#misses.push(key);
       return { result: "miss", name: null, sunk: false };
-    } // hit
+    }
+
+    // hit
     else {
       for (const [name, entry] of this.#ships) {
         if (entry.ship === target) {
