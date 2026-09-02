@@ -5,7 +5,7 @@ export class Deck {
   #deck;
   #queue = [];
   #attempted = new Set();
-  #queued = new Set();
+  #queued = new Map();
   #total;
 
   constructor(size = SIZE * SIZE) {
@@ -40,12 +40,26 @@ export class Deck {
 
   recordAttack(key, result) {
     if (result.result !== "hit") return;
+    const ship = result.name;
+    const keys = [];
 
-    for (const a of this.#adKeys(key))
-      if (!this.#attempted.has(a) && !this.#queued.has(a)) {
-        this.#queued.add(a);
-        this.#queue.push(a);
+    if (result.sunk) {
+      this.#clearQueue(ship);
+      return;
+    }
+
+    for (const adjacent of this.#adjacentKeys(key))
+      if (!this.#attempted.has(adjacent)) {
+        const ships = this.#queued.get(adjacent);
+
+        if (ships === undefined) {
+          this.#queued.set(adjacent, new Set([ship]));
+          keys.push(adjacent);
+        } else ships.add(ship);
       }
+
+    shuffle(keys);
+    this.#queue.push(...keys);
   }
 
   get size() {
@@ -56,19 +70,28 @@ export class Deck {
     return this.#attempted.size === this.#total;
   }
 
-  #adKeys(key) {
-    const ad = [];
+  #adjacentKeys(key) {
+    const adjacent = [];
 
     // left
-    if (key % SIZE !== 0) ad.push(key - 1);
+    if (key % SIZE !== 0) adjacent.push(key - 1);
     // right
-    if (key % SIZE !== SIZE - 1) ad.push(key + 1);
+    if (key % SIZE !== SIZE - 1) adjacent.push(key + 1);
     // up
-    if (key >= SIZE) ad.push(key - SIZE);
+    if (key >= SIZE) adjacent.push(key - SIZE);
     // down
-    if (key + SIZE < this.#total) ad.push(key + SIZE);
+    if (key + SIZE < this.#total) adjacent.push(key + SIZE);
 
     // filter to set size
-    return ad.filter((can) => can >= 0 && can < this.#total);
+    return adjacent.filter((can) => can >= 0 && can < this.#total);
+  }
+
+  #clearQueue(ship) {
+    for (const [key, ships] of this.#queued) {
+      ships.delete(ship);
+      if (ships.size === 0) this.#queued.delete(key);
+    }
+
+    this.#queue = this.#queue.filter((key) => this.#queued.has(key));
   }
 }

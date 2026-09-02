@@ -36,7 +36,7 @@ describe("cpuFleet", () => {
       // mark occupied spots with a 1, rest are 0
       const grid = Array(100).fill(0);
       for (const s of board.fleetShips) for (const c of s.cells) grid[c] = 1;
-      layouts.add(grid);
+      layouts.add(grid.join(""));
     }
     expect(layouts.size).toBeGreaterThan(5);
   });

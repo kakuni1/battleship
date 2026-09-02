@@ -74,4 +74,25 @@ describe("Deck", () => {
     const moves = [cpu.next(), cpu.next(), cpu.next(), cpu.next()];
     expect(new Set(moves).size).toBe(4);
   });
+
+  it("(1) ship sinks, (1) ship remains, queue clears only sunken ship cells", () => {
+    const cpu = new Deck();
+    cpu.recordAttack(44, {
+      result: "hit",
+      name: "Carrier",
+      sunk: false,
+    });
+    cpu.recordAttack(45, {
+      result: "hit",
+      name: "Destroyer",
+      sunk: false,
+    });
+    cpu.recordAttack(46, {
+      result: "hit",
+      name: "Destroyer",
+      sunk: true,
+    });
+    const moves = [cpu.next(), cpu.next(), cpu.next(), cpu.next()];
+    expect(new Set(moves)).toEqual(new Set([34, 43, 45, 54]));
+  });
 });
