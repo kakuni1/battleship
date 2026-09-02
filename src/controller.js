@@ -1,5 +1,5 @@
-import { autoFleet } from "./fleet.js";
 import { Deck } from "./cpu.js";
+import { autoFleet } from "./fleet.js";
 import { Player, PlayerType } from "./player.js";
 
 export const gamePhase = Object.freeze({
@@ -81,11 +81,12 @@ export class GameController {
 
     const attacker = this.activePlayer;
     const opponent = this.getPlayer(this.opponentPlayer);
-    const targetKey =
-      this.getPlayer(attacker).type === PlayerType.CPU
-        ? this.#cpuDeck[attacker].next()
-        : key;
+    const isCpu = this.getPlayer(attacker).type === PlayerType.CPU;
+    const targetKey = isCpu ? this.#cpuDeck[attacker].next() : key;
     const result = opponent.gameboard.receiveAttack(targetKey);
+
+    // record all cpu attacks
+    if (isCpu) this.#cpuDeck[attacker].recordAttack(targetKey, result);
 
     // end game or swap players & continue game
     if (opponent.gameboard.allSunk === true) {
