@@ -292,6 +292,28 @@ describe("Gameboard", () => {
     expect(board.isEmpty(2)).toBe(true);
   });
 
+  it("isEmpty, out of bounds, throw error", () => {
+    const board = new Gameboard();
+    expect(() => board.isEmpty(100)).toThrow("isEmpty, out of bounds");
+    expect(() => board.isEmpty(-1)).toThrow("isEmpty, out of bounds");
+  });
+
+  it("isEmpty, non-integer, throw error", () => {
+    const board = new Gameboard();
+    expect(() => board.isEmpty(1.1)).toThrow("isEmpty, must be integer");
+  });
+
+  it("isAttacked, out of bounds, throw error", () => {
+    const board = new Gameboard();
+    expect(() => board.isAttacked(100)).toThrow("isAttacked, out of bounds");
+    expect(() => board.isAttacked(-1)).toThrow("isAttacked, out of bounds");
+  });
+
+  it("isAttacked, non-integer, throw error", () => {
+    const board = new Gameboard();
+    expect(() => board.isAttacked(1.5)).toThrow("isAttacked, must be integer");
+  });
+
   it("no ships placed, fleetDone false", () => {
     const board = new Gameboard();
     expect(board.fleetDone).toBe(false);

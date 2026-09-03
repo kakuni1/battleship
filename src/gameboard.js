@@ -94,10 +94,12 @@ export class Gameboard {
   }
 
   isAttacked(key) {
+    this.#validateKey(key, "isAttacked");
     return this.#attacks.has(key);
   }
 
   isEmpty(key) {
+    this.#validateKey(key, "isEmpty");
     return this.#grid[key] === null;
   }
 
