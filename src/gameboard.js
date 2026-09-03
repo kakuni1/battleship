@@ -82,13 +82,11 @@ export class Gameboard {
     }
 
     // hit
-    else {
-      for (const [name, entry] of this.#ships) {
-        if (entry.ship === target) {
-          entry.ship.hit();
-          this.#hits.push(key);
-          return { result: "hit", name, sunk: entry.ship.isSunk };
-        }
+    for (const [name, entry] of this.#ships) {
+      if (entry.ship === target) {
+        entry.ship.hit();
+        this.#hits.push(key);
+        return { result: "hit", name, sunk: entry.ship.isSunk };
       }
     }
   }

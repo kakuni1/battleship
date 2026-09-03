@@ -29,7 +29,7 @@ export class Deck {
     while (this.#deck.length > 0) {
       const key = this.#deck.pop();
 
-      if (!this.#attempted.has(key) && !this.#queued.has(key)) {
+      if (!this.#attempted.has(key)) {
         this.#attempted.add(key);
         return key;
       }

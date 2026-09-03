@@ -69,10 +69,10 @@ describe("Deck", () => {
 
   it("hit, same cell twice, dont requeue", () => {
     const cpu = new Deck();
-    cpu.recordAttack(43, { result: "miss" });
-    cpu.recordAttack(43, { result: "miss" });
+    cpu.recordAttack(43, { result: "hit" });
+    cpu.recordAttack(43, { result: "hit" });
     const moves = [cpu.next(), cpu.next(), cpu.next(), cpu.next()];
-    expect(new Set(moves).size).toBe(4);
+    expect(new Set(moves)).toEqual(new Set([33, 42, 44, 53]));
   });
 
   it("(1) ship sinks, (1) ship remains, queue clears only sunken ship cells", () => {
