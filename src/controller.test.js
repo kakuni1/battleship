@@ -340,4 +340,24 @@ describe("GameController", () => {
     const game = new GameController();
     expect(game.isGameOver).toBe(false);
   });
+
+  it("playTurn, duplicate attack, return 'duplicate', reject turn", () => {
+    const game = new GameController();
+    game.autoPlace(0);
+    game.startGame();
+    game.playTurn(0);
+    game.playTurn(0);
+    expect(game.playTurn(0)).toEqual({
+      attacker: 0,
+      targetKey: 0,
+      result: "duplicate",
+      ship: null,
+      sunk: false,
+      gameOver: false,
+      winner: null,
+    });
+    // reject the turn, stay on same player's turn
+    expect(game.activePlayer).toBe(0);
+    expect(game.phase).toBe("play");
+  });
 });

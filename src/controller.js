@@ -83,6 +83,19 @@ export class GameController {
     const opponent = this.getPlayer(this.opponentPlayer);
     const isCpu = this.getPlayer(attacker).type === PlayerType.CPU;
     const targetKey = isCpu ? this.#cpuDeck[attacker].next() : key;
+
+    // return result "duplicate" instead of error throw
+    if (opponent.gameboard.isAttacked(targetKey))
+      return {
+        attacker,
+        targetKey,
+        result: "duplicate",
+        ship: null,
+        sunk: false,
+        gameOver: this.isGameOver,
+        winner: this.winner,
+      };
+
     const result = opponent.gameboard.receiveAttack(targetKey);
 
     // record all cpu attacks
