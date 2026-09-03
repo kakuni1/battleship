@@ -23,14 +23,14 @@ describe("Gameboard", () => {
     );
   });
 
-  it("check for valid length, too short", () => {
+  it("check for valid ship name (number)", () => {
     const board = new Gameboard();
     expect(() => board.placeShip(0, 1, "horizontal")).toThrow(
       "place, invalid ship name",
     );
   });
 
-  it("check for valid length, not an integer", () => {
+  it("check for valid ship name, (non-integer number)", () => {
     const board = new Gameboard();
     expect(() => board.placeShip(0, 2.5, "horizontal")).toThrow(
       "place, invalid ship name",

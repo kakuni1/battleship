@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { autoFleet } from "./fleet.js";
 import { Gameboard } from "./gameboard.js";
 
-describe("cpuFleet", () => {
+describe("autoFleet", () => {
   it("random cpu fleet placement, fleetDone true", () => {
     const board = new Gameboard();
     autoFleet(board);
