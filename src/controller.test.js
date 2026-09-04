@@ -341,6 +341,22 @@ describe("GameController", () => {
     expect(game.isGameOver).toBe(false);
   });
 
+  it("getPlayer, invalid index, throw error", () => {
+    const game = new GameController();
+    expect(() => game.getPlayer(2)).toThrow(
+      "controller getPlayer, out of bounds",
+    );
+    expect(() => game.getPlayer(-1)).toThrow(
+      "controller getPlayer, out of bounds",
+    );
+    expect(() => game.getPlayer(undefined)).toThrow(
+      "controller getPlayer, must be integer",
+    );
+    expect(() => game.getPlayer(0.5)).toThrow(
+      "controller getPlayer, must be integer",
+    );
+  });
+
   it("playTurn, duplicate attack, return 'duplicate', reject turn", () => {
     const game = new GameController();
     game.autoPlace(0);
@@ -359,5 +375,34 @@ describe("GameController", () => {
     // reject the turn, stay on same player's turn
     expect(game.activePlayer).toBe(0);
     expect(game.phase).toBe("play");
+  });
+
+  it("playTurn, cpu vs cpu, run game to completion", () => {
+    const game = new GameController(
+      "Computer 1",
+      "Computer 2",
+      PlayerType.CPU,
+      PlayerType.CPU,
+    );
+    game.startGame();
+
+    let turn = 0;
+    while (!game.isGameOver) {
+      game.playTurn(0);
+      turn += 1;
+    }
+
+    expect(turn).toBeGreaterThanOrEqual(33);
+    expect(turn).toBeLessThanOrEqual(200);
+    expect([0, 1]).toContain(game.winner);
+    // player 0 returns 1, player 1 returns 0
+    expect(turn % 2).toBe(game.winner === 0 ? 1 : 0);
+    expect(game.phase).toBe("gameOver");
+
+    const winner = game.getPlayer(game.winner);
+    const loser = game.getPlayer(1 - game.winner);
+    expect(winner.gameboard.allSunk).toBe(false);
+    expect(loser.gameboard.allSunk).toBe(true);
+    expect(loser.gameboard.hits.length).toBe(17);
   });
 });

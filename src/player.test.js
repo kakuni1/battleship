@@ -33,4 +33,10 @@ describe("Player", () => {
     const b = new Player(undefined, PlayerType.CPU);
     expect(a.gameboard).not.toBe(b.gameboard);
   });
+
+  it("invalid player type, throw error", () => {
+    expect(() => new Player("a player name", "abc")).toThrow(
+      "player, invalid type",
+    );
+  });
 });

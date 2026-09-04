@@ -119,6 +119,10 @@ export class GameController {
   }
 
   getPlayer(index) {
+    if (!Number.isInteger(index))
+      throw new Error("controller getPlayer, must be integer");
+    if (index < 0 || index > 1)
+      throw new Error("controller getPlayer, out of bounds");
     return this.#players[index];
   }
 
