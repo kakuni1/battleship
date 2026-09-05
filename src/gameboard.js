@@ -3,15 +3,12 @@ import { Ship } from "./ship.js";
 
 export class Gameboard {
   #attacks = new Set();
+  #misses = new Set();
   #ships = new Map();
-  #hits;
-  #misses;
   #grid;
 
   constructor() {
     this.#grid = Array(SIZE * SIZE).fill(null);
-    this.#hits = [];
-    this.#misses = [];
   }
 
   placeShip(key, name, direction) {
@@ -77,7 +74,7 @@ export class Gameboard {
     // miss
     const target = this.#grid[key];
     if (target === null) {
-      this.#misses.push(key);
+      this.#misses.add(key);
       return { result: "miss", name: null, sunk: false };
     }
 
@@ -85,7 +82,6 @@ export class Gameboard {
     for (const [name, entry] of this.#ships) {
       if (entry.ship === target) {
         entry.ship.hit();
-        this.#hits.push(key);
         return { result: "hit", name, sunk: entry.ship.isSunk };
       }
     }
@@ -94,6 +90,13 @@ export class Gameboard {
   isAttacked(key) {
     this.#validateKey(key, "isAttacked");
     return this.#attacks.has(key);
+  }
+
+  resultAt(key) {
+    this.#validateKey(key, "resultAt");
+    if (!this.#attacks.has(key)) return null;
+    if (this.#misses.has(key)) return "miss";
+    return "hit";
   }
 
   isEmpty(key) {
@@ -133,26 +136,13 @@ export class Gameboard {
     return this.#ships.size === FLEET.length;
   }
 
-  get attacks() {
-    return new Set(this.#attacks);
-  }
-
-  get hits() {
-    return [...this.#hits];
-  }
-
-  get misses() {
-    return [...this.#misses];
-  }
-
   reset() {
     if (this.#attacks.size > 0) throw new Error("reset, game already started");
 
     this.#ships.clear();
     this.#grid.fill(null);
     this.#attacks.clear();
-    this.#hits = [];
-    this.#misses = [];
+    this.#misses.clear();
   }
 
   #validateKey(key, prefix) {

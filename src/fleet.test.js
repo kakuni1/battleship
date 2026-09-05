@@ -21,11 +21,10 @@ describe("autoFleet", () => {
     expect(board.fleetShips.length).toBe(5);
   });
 
-  it("new fleet, no hits or misses", () => {
+  it("new fleet, no attacks recorded", () => {
     const board = new Gameboard();
     autoFleet(board);
-    expect(board.hits).toEqual([]);
-    expect(board.misses).toEqual([]);
+    for (let i = 0; i < 100; i++) expect(board.resultAt(i)).toBeNull();
   });
 
   it("check that ships were randomly placed, run multiple times (10)", () => {
