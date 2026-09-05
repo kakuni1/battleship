@@ -139,28 +139,28 @@ describe("Gameboard", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(55);
-    expect(board.misses).toEqual([55]);
+    expect(board.resultAt(55)).toBe("miss");
   });
 
-  it("hit (1), miss, dont track", () => {
+  it("hit (1), miss, dont track as miss", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(0);
-    expect(board.misses).toEqual([]);
+    expect(board.resultAt(0)).not.toBe("miss");
   });
 
   it("hit (1), track the hit", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(0);
-    expect(board.hits).toEqual([0]);
+    expect(board.resultAt(0)).toBe("hit");
   });
 
-  it("miss (1), dont track", () => {
+  it("miss (1), dont track as hit", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(55);
-    expect(board.hits).toEqual([]);
+    expect(board.resultAt(55)).not.toBe("hit");
   });
 
   it("hits (2), track in order", () => {
@@ -168,7 +168,8 @@ describe("Gameboard", () => {
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(0);
     board.receiveAttack(1);
-    expect(board.hits).toEqual([0, 1]);
+    expect(board.resultAt(0)).toBe("hit");
+    expect(board.resultAt(1)).toBe("hit");
   });
 
   it("ships (2) & (5), not sunk, allSunk false", () => {
@@ -213,9 +214,9 @@ describe("Gameboard", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.receiveAttack(77);
-    expect(board.misses).toEqual([77]);
+    expect(board.resultAt(77)).toBe("miss");
     expect(() => board.receiveAttack(77)).toThrow("attack, duplicate");
-    expect(board.misses).toEqual([77]);
+    expect(board.resultAt(77)).toBe("miss");
   });
 
   it("ship (2), attack out of bounds", () => {
