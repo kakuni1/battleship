@@ -1,0 +1,85 @@
+:root {
+  --color-bg: #fafafa;
+  --color-text: #5c6773;
+  --color-link: #1891d6;
+  --color-error: #e65050;
+  --color-valid: #6cbf43;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #0f1419;
+    --color-text: #b3b1ad;
+    --color-link: #59c2ff;
+    --color-error: #d95757;
+    --color-valid: #70bf56;
+  }
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.75;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+  animation: fadeIn 0.3s ease-in forwards;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
+  opacity: 0;
+}
+
+main {
+  max-width: 550px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+a {
+  color: var(--color-link);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+a:focus-visible {
+  outline: 2px solid var(--color-link);
+  outline-offset: 2px;
+}
+
+::selection {
+  background-color: var(--color-link);
+  color: var(--color-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body {
+    transition: none;
+    animation-duration: 0s;
+  }
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+  }
+}
+
+.indent {
+  padding-left: 2rem;
+}
+
+.space {
+  margin: 0.75rem 0rem;
+}
+
+.error {
+  border-color: var(--color-error);
+  outline-color: var(--color-error);
+}
