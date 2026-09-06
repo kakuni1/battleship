@@ -471,10 +471,14 @@ describe("Gameboard", () => {
     ]);
   });
 
-  it("getter fleetShips (multi-ship), returns name, cells & isSunk", () => {
+  it("getter fleetShips (multi-ship), returns copies, no mutations", () => {
     const board = new Gameboard();
     board.placeShip(0, "Destroyer", "horizontal");
     board.placeShip(50, "Carrier", "horizontal");
+
+    const leak = board.fleetShips;
+    leak[0].cells.push(100);
+
     expect(board.fleetShips).toEqual([
       { name: "Destroyer", cells: [0, 1], isSunk: false },
       { name: "Carrier", cells: [50, 51, 52, 53, 54], isSunk: false },
@@ -487,5 +491,25 @@ describe("Gameboard", () => {
     expect(board.shipAt(0)).toEqual({ name: "Destroyer", isSunk: false });
     expect(board.shipAt(1)).toEqual({ name: "Destroyer", isSunk: false });
     expect(board.shipAt(2)).toBeNull();
+  });
+
+  it("shipCells, returns copy occupied cells for ship, no mutations", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+
+    const leak = board.shipCells("Destroyer");
+    leak.push(100);
+
+    expect(() => board.shipCells("Shippy")).toThrow("shipCells, unknown ship");
+    expect(board.shipCells("Destroyer")).toEqual([0, 1]);
+    board.removeShip("Destroyer");
+    expect(() => board.shipCells("Destroyer")).toThrow(
+      "shipCells, unknown ship",
+    );
+
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    board.receiveAttack(1);
+    expect(board.shipCells("Destroyer")).toEqual([0, 1]);
   });
 });

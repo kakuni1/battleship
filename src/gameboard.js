@@ -124,6 +124,11 @@ export class Gameboard {
     return null;
   }
 
+  shipCells(name) {
+    if (!this.#ships.has(name)) throw new Error("shipCells, unknown ship");
+    return [...this.#ships.get(name).cells];
+  }
+
   get fleetShips() {
     return [...this.#ships].map(([name, { ship, cells }]) => ({
       name,
