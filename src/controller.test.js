@@ -365,6 +365,7 @@ describe("GameController", () => {
       result: "duplicate",
       ship: null,
       sunk: false,
+      cells: null,
       gameOver: false,
       winner: null,
     });

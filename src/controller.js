@@ -92,11 +92,17 @@ export class GameController {
         result: "duplicate",
         ship: null,
         sunk: false,
+        cells: null,
         gameOver: this.isGameOver,
         winner: this.winner,
       };
 
     const result = opponent.gameboard.receiveAttack(targetKey);
+
+    // on sink, record cells for ship sunk
+    const cells = result.sunk
+      ? opponent.gameboard.shipCells(result.name)
+      : null;
 
     // record all cpu attacks
     if (isCpu) this.#cpuDeck[attacker].recordAttack(targetKey, result);
@@ -113,6 +119,7 @@ export class GameController {
       result: result.result,
       ship: result.name,
       sunk: result.sunk,
+      cells: cells,
       gameOver: this.isGameOver,
       winner: this.winner,
     };
