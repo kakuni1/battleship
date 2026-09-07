@@ -54,8 +54,24 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Place your Carrier";
   }
 
+  function onAuto() {
+    try {
+      controller.autoPlace(0);
+    } catch (error) {
+      // update with status message on error
+      repaint();
+      statusEl.textContent = error.message;
+      return;
+    }
+
+    repaint();
+    buttonStartEl.disabled = false;
+    statusEl.textContent = "Fleet ready";
+  }
+
   // setup event listeners
   buttonRotateEl.addEventListener("click", onRotate);
+  buttonAutoEl.addEventListener("click", onAuto);
   buttonRestartEl.addEventListener("click", onRestart);
 
   // one-time setup
