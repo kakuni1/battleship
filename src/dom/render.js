@@ -1,4 +1,4 @@
-import { SIZE } from "../constants.js";
+import { FLEET, SIZE } from "../constants.js";
 
 export function createBoard() {
   const board = document.createElement("div");
@@ -27,4 +27,20 @@ export function updateBoard(boardEl, gameboard) {
 export function clearBoard(boardEl) {
   for (const cell of boardEl.querySelectorAll(".cell"))
     cell.classList.remove("miss", "hit", "sunk");
+}
+
+export function updateQueue(ulEl, gameboard) {
+  const fleet = new Set();
+  for (const ship of gameboard.fleetShips) fleet.add(ship.name);
+  for (const li of ulEl.children)
+    li.classList.toggle("placed", fleet.has(li.dataset.name));
+}
+
+export function buildQueue(ulEl) {
+  for (const { name } of FLEET) {
+    const li = document.createElement("li");
+    li.textContent = name;
+    li.dataset.name = name;
+    ulEl.appendChild(li);
+  }
 }
