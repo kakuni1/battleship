@@ -21,6 +21,10 @@ export function init(controller, { playerBoard, enemyBoard }) {
   let direction = "horizontal";
   let busy = false;
 
+  function onRotate() {
+    direction = direction === "horizontal" ? "vertical" : "horizontal";
+  }
+
   function currentShip() {
     const placed = new Set(
       controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
@@ -45,4 +49,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   repaint();
   buttonStartEl.disabled = true;
   statusEl.textContent = "Place your Carrier";
+
+  // setup event listeners
+  buttonRotateEl.addEventListener("click", onRotate);
 }
