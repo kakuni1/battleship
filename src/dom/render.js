@@ -26,7 +26,7 @@ export function updateBoard(boardEl, gameboard) {
 
 export function clearBoard(boardEl) {
   for (const cell of boardEl.querySelectorAll(".cell"))
-    cell.classList.remove("miss", "hit", "sunk");
+    cell.classList.remove("miss", "hit", "sunk", "ship");
 }
 
 export function updateQueue(ulEl, gameboard) {
@@ -43,4 +43,10 @@ export function buildQueue(ulEl) {
     li.dataset.name = name;
     ulEl.appendChild(li);
   }
+}
+
+export function markShips(boardEl, gameboard) {
+  const shipKeys = new Set(gameboard.fleetShips.flatMap((ship) => ship.cells));
+  for (const [key, cell] of boardEl.querySelectorAll(".cell").entries())
+    cell.classList.toggle("ship", shipKeys.has(key));
 }
