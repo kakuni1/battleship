@@ -1,4 +1,5 @@
 import { FLEET } from "../constants.js";
+import { clearBoard, markShips, updateBoard, updateQueue } from "./render.js";
 
 export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
@@ -21,5 +22,15 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
     // name of first ship not yet placed
     return FLEET.find(({ name }) => !placed.has(name))?.name;
+  }
+
+  function repaint() {
+    clearBoard(playerBoard);
+    clearBoard(enemyBoard);
+    updateBoard(playerBoard, controller.getPlayer(0).gameboard);
+    // show ships for player only, keep enemy ships hidden (fog-of-war)
+    markShips(playerBoard, controller.getPlayer(0).gameboard);
+    updateBoard(enemyBoard, controller.getPlayer(1).gameboard);
+    updateQueue(queueEl, controller.getPlayer(0).gameboard);
   }
 }
