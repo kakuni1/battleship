@@ -1,5 +1,11 @@
 import { FLEET } from "../constants.js";
-import { clearBoard, markShips, updateBoard, updateQueue } from "./render.js";
+import {
+  buildQueue,
+  clearBoard,
+  markShips,
+  updateBoard,
+  updateQueue,
+} from "./render.js";
 
 export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
@@ -33,4 +39,10 @@ export function init(controller, { playerBoard, enemyBoard }) {
     updateBoard(enemyBoard, controller.getPlayer(1).gameboard);
     updateQueue(queueEl, controller.getPlayer(0).gameboard);
   }
+
+  // one-time setup
+  buildQueue(queueEl);
+  repaint();
+  buttonStartEl.disabled = true;
+  statusEl.textContent = "Place your Carrier";
 }
