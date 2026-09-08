@@ -76,6 +76,67 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Fleet ready";
   }
 
+  function onClickAttack(event) {
+    const key = parseKey(event);
+
+    // conditions for immediate exit
+    if (controller.phase !== gamePhase.PLAY) return;
+    if (Number.isNaN(key)) return;
+    if (busy) return;
+
+    // player turn
+    busy = true;
+    const turn = controller.playTurn(key);
+    if (turn.result === "duplicate") {
+      statusEl.textContent = "Already attacked";
+      busy = false;
+      return;
+    }
+    if (turn.result === "hit") {
+      statusEl.textContent = `You hit ${turn.ship}!`;
+      busy = false;
+    }
+    if (turn.result === "miss") {
+      statusEl.textContent = "You missed";
+      busy = false;
+    }
+
+    // gameover check
+    if (turn.gameOver) {
+      winnerEl.textContent = controller.getPlayer(turn.winner).name;
+      gameoverEl.hidden = false;
+      repaint();
+      return;
+    }
+
+    // cpu turn
+    busy = true;
+    const cpuTurn = controller.playTurn();
+
+    // duplicate should never occur for cpu, defensive measure
+    if (cpuTurn.result === "duplicate") {
+      statusEl.textContent = "CPU, already attacked";
+      busy = false;
+      return;
+    }
+    if (cpuTurn.result === "hit") {
+      statusEl.textContent = `CPU hit your ${cpuTurn.ship}!`;
+      busy = false;
+    }
+    if (cpuTurn.result === "miss") {
+      statusEl.textContent = "CPU missed";
+      busy = false;
+    }
+
+    // gameover check
+    if (cpuTurn.gameOver) {
+      winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
+      gameoverEl.hidden = false;
+    }
+
+    repaint();
+  }
+
   function onRotate() {
     direction = direction === "horizontal" ? "vertical" : "horizontal";
   }
@@ -118,6 +179,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   // setup event listeners
   playerBoard.addEventListener("click", onClickPlace);
+  enemyBoard.addEventListener("click", onClickAttack);
   buttonRotateEl.addEventListener("click", onRotate);
   buttonAutoEl.addEventListener("click", onAuto);
   buttonStartEl.addEventListener("click", onStart);
