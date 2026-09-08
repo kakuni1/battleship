@@ -100,10 +100,23 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Fleet ready";
   }
 
+  function onStart() {
+    try {
+      controller.startGame();
+    } catch (error) {
+      statusEl.textContent = error.message;
+      return;
+    }
+
+    placementEl.hidden = true;
+    statusEl.textContent = "Your turn";
+  }
+
   // setup event listeners
   playerBoard.addEventListener("click", onClickPlace);
   buttonRotateEl.addEventListener("click", onRotate);
   buttonAutoEl.addEventListener("click", onAuto);
+  buttonStartEl.addEventListener("click", onStart);
   buttonRestartEl.addEventListener("click", onRestart);
 
   // one-time setup
