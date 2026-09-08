@@ -22,6 +22,10 @@ export function init(controller, { playerBoard, enemyBoard }) {
   let direction = "horizontal";
   let busy = false;
 
+  function parseKey(event) {
+    return Number.parseInt(event.target.dataset.key, 10);
+  }
+
   function currentShip() {
     const placed = new Set(
       controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
@@ -42,7 +46,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   }
 
   function onClickPlace(event) {
-    const key = Number.parseInt(event.target.dataset.key, 10);
+    const key = parseKey(event);
     const name = currentShip();
 
     // conditions for immediate exit
