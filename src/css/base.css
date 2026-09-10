@@ -1,43 +1,67 @@
 :root {
-  --color-bg: #fafafa;
-  --color-text: #5c6773;
-  --color-link: #1891d6;
-  --color-error: #e65050;
-  --color-valid: #6cbf43;
+  --color-bg: #f4f7fb;
+  --color-surface: #ffffff;
+  --color-text: #243244;
+  --color-muted: #64748b;
+  --color-border: #d5dee8;
+  --color-link: #0b70c9;
+  --color-focus: #2563eb;
+  --color-error: #cf4545;
+  --color-valid: #4f9f46;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
     --color-bg: #0f1419;
-    --color-text: #b3b1ad;
+    --color-surface: #17212b;
+    --color-text: #e5edf5;
+    --color-muted: #a6b3bf;
+    --color-border: #344555;
     --color-link: #59c2ff;
-    --color-error: #d95757;
-    --color-valid: #70bf56;
+    --color-focus: #7dd3fc;
+    --color-error: #ed6a6a;
+    --color-valid: #79c65b;
   }
 }
 
-* {
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+
+  button:active:not(:disabled) {
+    transform: none;
+  }
+}
+
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: system-ui, -apple-system, sans-serif;
-  line-height: 1.75;
   color: var(--color-text);
   background-color: var(--color-bg);
-  animation: fadeIn 0.3s ease-in forwards;
-  transition:
-    background-color 0.3s,
-    color 0.3s;
-  opacity: 0;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, sans-serif;
+  line-height: 1.5;
 }
 
 main {
-  max-width: 550px;
-  margin: 0 auto;
-  padding: 2rem;
+  min-height: 100vh;
+  width: min(calc(100% - 2rem), 75rem);
+  padding-block: clamp(1rem, 4vw, 2.5rem) 3rem;
+  margin-inline: auto;
+}
+
+h1 {
+  margin-bottom: 0.25rem;
+  text-align: center;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  line-height: 1.2;
 }
 
 a {
@@ -53,33 +77,44 @@ a:focus-visible {
   outline-offset: 2px;
 }
 
+button {
+  appearance: none;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+  padding: 0.15rem 0.25rem;
+  font: inherit;
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+button:hover:not(:disabled) {
+  border-color: var(--color-link);
+  background: var(--color-bg);
+}
+
+button:active:not(:disabled) {
+  transform: translateX(0.15rem) translateY(-0.075rem) scale(0.95)
+    rotate(1.25deg);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 ::selection {
   background-color: var(--color-link);
   color: var(--color-bg);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body {
-    transition: none;
-    animation-duration: 0s;
-  }
-}
-
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-  }
-}
-
-.indent {
-  padding-left: 2rem;
-}
-
-.space {
-  margin: 0.75rem 0rem;
-}
-
-.error {
-  border-color: var(--color-error);
-  outline-color: var(--color-error);
 }

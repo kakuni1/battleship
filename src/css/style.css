@@ -1,0 +1,211 @@
+:root {
+  --size: 10; /* SIZE value */
+  --color-water: #bcd7ea;
+  --color-sunk: #8c2f2f;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-water: #1e3a52;
+    --color-sunk: #803030;
+  }
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cell:hover {
+    filter: brightness(1.5);
+    transform: scale(0.95);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
+}
+
+@media (max-width: 700px) {
+  #game {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "controls"
+      "player-title"
+      "player-board"
+      "enemy-title"
+      "enemy-board";
+  }
+
+  #game:has(> #placement-controls[hidden]) {
+    grid-template-areas:
+      "player-title"
+      "player-board"
+      "enemy-title"
+      "enemy-board";
+  }
+}
+
+@media (max-width: 420px) {
+  #placement-controls button {
+    flex-basis: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
+}
+
+#placement-controls[hidden],
+#gameover[hidden] {
+  display: none;
+}
+
+#game {
+  display: grid;
+  gap: 1rem 1.5rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-areas:
+    "controls controls"
+    "player-title enemy-title"
+    "player-board enemy-board";
+}
+
+#placement-controls {
+  grid-area: controls;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+}
+
+#ship-queue {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  list-style: none;
+}
+
+#ship-queue li {
+  color: var(--color-muted);
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  padding: 0.125rem 0.25rem;
+  font-size: 0.8rem;
+}
+
+#ship-queue li.placed {
+  opacity: 0.65;
+  text-decoration: line-through;
+}
+
+#status {
+  color: var(--color-muted);
+  min-height: 1.5em;
+  margin-block: 0.25rem 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+#game > h2 {
+  color: var(--color-muted);
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: 0.05rem;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#game > h2:first-of-type {
+  grid-area: player-title;
+}
+
+#game > h2:nth-of-type(2) {
+  grid-area: enemy-title;
+}
+
+#player-board {
+  grid-area: player-board;
+  min-width: 0;
+}
+
+#enemy-board {
+  grid-area: enemy-board;
+  min-width: 0;
+}
+
+#game:has(> #placement-controls[hidden]) {
+  grid-template-areas:
+    "player-title enemy-title"
+    "player-board enemy-board";
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(var(--size), 1fr);
+  gap: 10px;
+  width: 100%;
+  padding: 10px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+  overflow: hidden;
+}
+
+.cell {
+  aspect-ratio: 1;
+  background: var(--color-water);
+  border: 2px solid rgb(255 255 255 / 25%);
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition:
+    filter 150ms ease,
+    transform 150ms ease;
+}
+
+.cell:focus-visible {
+  outline: 3px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+#gameover {
+  display: grid;
+  grid-column: 1 / -1;
+  justify-items: center;
+  gap: 1rem;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+  text-align: center;
+}
+
+#winner {
+  font-size: 1.25rem;
+  font-weight: 800;
+}
+
+.ship {
+  background: var(--color-valid);
+}
+
+.miss {
+  background: var(--color-link);
+}
+
+.hit {
+  background: var(--color-error);
+}
+
+.sunk {
+  background: var(--color-sunk);
+}
+
+.placed {
+  text-decoration: line-through;
+}
