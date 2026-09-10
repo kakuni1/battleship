@@ -7,7 +7,10 @@ export function createBoard() {
   for (let key = 0; key < SIZE * SIZE; key++) {
     const cell = document.createElement("div");
     cell.classList.add("cell");
+    // assign key (coords) to dataset
     cell.dataset.key = key;
+    // allow tab to cycle through the two gameboards
+    cell.tabIndex = key === 0 ? 0 : -1;
     board.appendChild(cell);
   }
 
