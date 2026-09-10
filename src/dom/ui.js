@@ -59,7 +59,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
       return;
     }
 
-    if (event.key === "Enter" || event.key === "") {
+    if (event.key === "Enter" || event.key === " ") {
       event.preventDefault();
       // re-enable onClickPlace & onClickAttack
       activate(event);
