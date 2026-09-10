@@ -1,4 +1,4 @@
-import { FLEET } from "../constants.js";
+import { FLEET, SIZE } from "../constants.js";
 import { gamePhase } from "../controller.js";
 import {
   buildQueue,
@@ -24,6 +24,46 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function parseKey(event) {
     return Number.parseInt(event.target.dataset.key, 10);
+  }
+
+  function moveFocus(board, key, rowDelta, colDelta) {
+    const row = Math.floor(key / SIZE) + rowDelta;
+    const col = (key % SIZE) + colDelta;
+    if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) return;
+
+    const next = board.querySelector(`.cell[data-key="${row * SIZE + col}"]`);
+    if (!next) return;
+
+    // find focused, reset value, move to next, set as new focus
+    board.querySelector('.cell[tabindex="0"]').setAttribute("tabindex", "-1");
+    next.tabIndex = 0;
+    next.focus();
+  }
+
+  function onBoardKeyDown(event, activate) {
+    const key = parseKey(event);
+    if (Number.isNaN(key)) return;
+
+    const arrows = {
+      ArrowUp: [-1, 0],
+      ArrowDown: [1, 0],
+      ArrowLeft: [0, -1],
+      ArrowRight: [0, 1],
+    };
+
+    const move = arrows[event.key];
+    if (move) {
+      // prevent default scroll
+      event.preventDefault();
+      moveFocus(event.currentTarget, key, move[0], move[1]);
+      return;
+    }
+
+    if (event.key === "Enter" || event.key === "") {
+      event.preventDefault();
+      // re-enable onClickPlace & onClickAttack
+      activate(event);
+    }
   }
 
   function currentShip() {
@@ -179,7 +219,13 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   // setup event listeners
   playerBoard.addEventListener("click", onClickPlace);
+  playerBoard.addEventListener("keydown", (e) =>
+    onBoardKeyDown(e, onClickPlace),
+  );
   enemyBoard.addEventListener("click", onClickAttack);
+  enemyBoard.addEventListener("keydown", (e) =>
+    onBoardKeyDown(e, onClickAttack),
+  );
   buttonRotateEl.addEventListener("click", onRotate);
   buttonAutoEl.addEventListener("click", onAuto);
   buttonStartEl.addEventListener("click", onStart);
