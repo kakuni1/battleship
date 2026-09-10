@@ -24,16 +24,6 @@
   }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  button {
-    transition: none;
-  }
-
-  button:active:not(:disabled) {
-    transform: none;
-  }
-}
-
 *,
 *::before,
 *::after {
@@ -117,4 +107,14 @@ button:focus-visible {
 ::selection {
   background-color: var(--color-link);
   color: var(--color-bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  button {
+    transition: none;
+  }
+
+  button:active:not(:disabled) {
+    transform: none;
+  }
 }

@@ -3,6 +3,7 @@ import { FLEET, SIZE } from "../constants.js";
 export function createBoard() {
   const board = document.createElement("div");
   board.classList.add("board");
+  board.style.setProperty("--size", SIZE);
 
   for (let key = 0; key < SIZE * SIZE; key++) {
     const cell = document.createElement("div");

@@ -1,5 +1,4 @@
 :root {
-  --size: 10; /* SIZE value */
   --color-water: #bcd7ea;
   --color-sunk: #8c2f2f;
 }
@@ -15,12 +14,6 @@
   .cell:hover {
     filter: brightness(1.5);
     transform: scale(0.95);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cell {
-    transition: none;
   }
 }
 
@@ -47,12 +40,6 @@
 @media (max-width: 420px) {
   #placement-controls button {
     flex-basis: 100%;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cell {
-    transition: none;
   }
 }
 
@@ -147,7 +134,7 @@
 
 .board {
   display: grid;
-  grid-template-columns: repeat(var(--size), 1fr);
+  grid-template-columns: repeat(var(--size, 10), 1fr);
   gap: 10px;
   width: 100%;
   padding: 10px;
@@ -206,6 +193,8 @@
   background: var(--color-sunk);
 }
 
-.placed {
-  text-decoration: line-through;
+@media (prefers-reduced-motion: reduce) {
+  .cell {
+    transition: none;
+  }
 }
