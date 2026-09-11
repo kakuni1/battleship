@@ -188,6 +188,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     gameoverEl.hidden = true;
     direction = "horizontal";
     busy = false;
+    buttonStartEl.disabled = true;
     statusEl.textContent = "Place your Carrier";
   }
 
