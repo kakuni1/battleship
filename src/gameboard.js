@@ -13,6 +13,7 @@ export class Gameboard {
 
   placeShip(key, name, direction) {
     this.#validateKey(key, "place");
+    if (this.#attacks.size > 0) throw new Error("place, game already started");
 
     // ship check
     const entry = FLEET.find((s) => s.name === name);

@@ -37,6 +37,23 @@ describe("Gameboard", () => {
     );
   });
 
+  it("cannot place a ship after a miss, game started, throw error", () => {
+    const board = new Gameboard();
+    board.receiveAttack(0);
+    expect(() => board.placeShip(0, "Destroyer", "horizontal")).toThrow(
+      "place, game already started",
+    );
+  });
+
+  it("cannot place a ship after a hit, game started, throw error", () => {
+    const board = new Gameboard();
+    board.placeShip(0, "Destroyer", "horizontal");
+    board.receiveAttack(0);
+    expect(() => board.placeShip(10, "Carrier", "horizontal")).toThrow(
+      "place, game already started",
+    );
+  });
+
   it("check for valid direction", () => {
     const board = new Gameboard();
     expect(() => board.placeShip(0, "Destroyer", "x")).toThrow(
