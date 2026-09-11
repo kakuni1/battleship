@@ -1,4 +1,5 @@
 import { FLEET, SIZE } from "./constants.js";
+import { fitsBoard, spanCells } from "./grid.js";
 import { Ship } from "./ship.js";
 
 export class Gameboard {
@@ -28,21 +29,11 @@ export class Gameboard {
     }
 
     // wrap check
-    if (direction === "horizontal" && (key % SIZE) + entry.length > SIZE) {
+    if (!fitsBoard(key, entry.length, direction))
       throw new Error("place, out of bounds");
-    }
-    if (
-      direction === "vertical" &&
-      Math.floor(key / SIZE) + entry.length > SIZE
-    ) {
-      throw new Error("place, out of bounds");
-    }
 
     // overlap check
-    const cells = [];
-    for (let i = 0; i < entry.length; i++) {
-      cells.push(direction === "horizontal" ? key + i : key + i * SIZE);
-    }
+    const cells = spanCells(key, entry.length, direction);
     for (const cell of cells) {
       if (this.#grid[cell] !== null) throw new Error("place, cell occupied");
     }
