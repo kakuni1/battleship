@@ -1,4 +1,4 @@
-import { FLEET, SIZE } from "../constants.js";
+import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { gamePhase } from "../controller.js";
 import {
   buildQueue,
@@ -19,7 +19,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const winnerEl = document.getElementById("winner");
   const buttonRestartEl = document.getElementById("button-restart");
 
-  let direction = "horizontal";
+  let direction = DIRECTIONS.H;
   let busy = false;
 
   function parseKey(event) {
@@ -178,7 +178,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   }
 
   function onRotate() {
-    direction = direction === "horizontal" ? "vertical" : "horizontal";
+    direction = direction === DIRECTIONS.H ? DIRECTIONS.V : DIRECTIONS.H;
   }
 
   function onRestart() {
@@ -186,7 +186,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     repaint();
     placementEl.hidden = false;
     gameoverEl.hidden = true;
-    direction = "horizontal";
+    direction = DIRECTIONS.H;
     busy = false;
     buttonStartEl.disabled = true;
     statusEl.textContent = "Place your Carrier";

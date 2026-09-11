@@ -1,4 +1,4 @@
-import { FLEET, SIZE } from "./constants.js";
+import { DIRECTIONS, FLEET, SIZE } from "./constants.js";
 import { fitsBoard, spanCells } from "./grid.js";
 import { Ship } from "./ship.js";
 
@@ -24,7 +24,7 @@ export class Gameboard {
     if (this.#ships.has(name)) throw new Error("place, ship already placed");
 
     // direction check
-    if (!["horizontal", "vertical"].includes(direction)) {
+    if (!Object.values(DIRECTIONS).includes(direction)) {
       throw new Error("place, invalid direction");
     }
 

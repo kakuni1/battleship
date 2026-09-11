@@ -1,4 +1,8 @@
 export const SIZE = 10;
+export const DIRECTIONS = Object.freeze({
+  H: "horizontal",
+  V: "vertical",
+});
 export const FLEET = Object.freeze([
   Object.freeze({ name: "Carrier", length: 5 }),
   Object.freeze({ name: "Battleship", length: 4 }),
