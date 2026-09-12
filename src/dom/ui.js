@@ -1,6 +1,6 @@
 import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { gamePhase } from "../controller.js";
-import { fitsBoard, spanCells } from "../grid.js";
+import { calcCol, calcRow, fitsBoard, spanCells } from "../grid.js";
 import {
   buildQueue,
   clearBoard,
@@ -13,11 +13,20 @@ import {
 
 export function highlightShip(key, length, direction, gameboard) {
   if (!Number.isInteger(key)) return { cells: [], valid: false };
-  if (!fitsBoard(key, length, direction)) return { cells: [], valid: false };
 
-  const cells = spanCells(key, length, direction);
+  const fits = fitsBoard(key, length, direction);
+  const row = calcRow(key);
+  const col = calcCol(key);
+
+  const cells = spanCells(key, length, direction).filter((cell) => {
+    if (cell < 0 || cell >= SIZE * SIZE) return false;
+    if (direction === DIRECTIONS.H) return calcRow(cell) === row;
+    if (direction === DIRECTIONS.V) return calcCol(cell) === col;
+    return false;
+  });
+
+  if (!fits) return { cells, valid: false };
   const valid = cells.every((cell) => gameboard.isEmpty(cell));
-
   return { cells, valid };
 }
 
@@ -238,13 +247,13 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
     const name = currentShip();
     if (!name) {
-      clearPreview();
+      clearPreview(playerBoard);
       return;
     }
 
     const ship = FLEET.find(({ name: shipName }) => shipName === name);
     if (!ship) {
-      clearPreview();
+      clearPreview(playerBoard);
       return;
     }
 
@@ -287,7 +296,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   // clear preview when focus goes off board
   playerBoard.addEventListener("focusout", (e) => {
     if (playerBoard.contains(e.relatedTarget)) return;
-    clearPreview();
+    clearPreview(playerBoard);
   });
   enemyBoard.addEventListener("click", onClickAttack);
   enemyBoard.addEventListener("keydown", (e) =>
