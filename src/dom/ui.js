@@ -200,6 +200,19 @@ export function init(controller, { playerBoard, enemyBoard }) {
     repaint();
   }
 
+  function onPlacementKeyDown(event) {
+    const isRotateKey =
+      event.key.toLowerCase() === "r" &&
+      !event.ctrlKey &&
+      !event.altKey &&
+      !event.metaKey;
+
+    if (!isRotateKey || controller.phase !== gamePhase.PLACE) return;
+
+    event.preventDefault();
+    onRotate();
+  }
+
   function onRotate() {
     direction = direction === DIRECTIONS.H ? DIRECTIONS.V : DIRECTIONS.H;
     refreshPreview();
@@ -247,13 +260,13 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
     const name = currentShip();
     if (!name) {
-      clearPreview(playerBoard);
+      clearPlayerPreview();
       return;
     }
 
     const ship = FLEET.find(({ name: shipName }) => shipName === name);
     if (!ship) {
-      clearPreview(playerBoard);
+      clearPlayerPreview();
       return;
     }
 
@@ -269,15 +282,13 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function previewShip(event) {
     if (controller.phase !== gamePhase.PLACE) {
-      previewKey = null;
-      clearPreview(playerBoard);
+      clearPlayerPreview();
       return;
     }
 
     const key = parseKey(event);
     if (Number.isNaN(key)) {
-      previewKey = null;
-      clearPreview(playerBoard);
+      clearPlayerPreview();
       return;
     }
 
@@ -285,18 +296,24 @@ export function init(controller, { playerBoard, enemyBoard }) {
     refreshPreview();
   }
 
+  function clearPlayerPreview() {
+    previewKey = null;
+    clearPreview(playerBoard);
+  }
+
   // setup event listeners
+  document.addEventListener("keydown", onPlacementKeyDown);
   playerBoard.addEventListener("click", onClickPlace);
   playerBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickPlace),
   );
   playerBoard.addEventListener("pointerover", previewShip);
   playerBoard.addEventListener("focusin", previewShip);
-  playerBoard.addEventListener("pointerleave", clearPreview);
+  playerBoard.addEventListener("pointerleave", clearPlayerPreview);
   // clear preview when focus goes off board
   playerBoard.addEventListener("focusout", (e) => {
     if (playerBoard.contains(e.relatedTarget)) return;
-    clearPreview(playerBoard);
+    clearPlayerPreview();
   });
   enemyBoard.addEventListener("click", onClickAttack);
   enemyBoard.addEventListener("keydown", (e) =>
