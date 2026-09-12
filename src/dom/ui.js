@@ -4,7 +4,9 @@ import { fitsBoard, spanCells } from "../grid.js";
 import {
   buildQueue,
   clearBoard,
+  clearPreview,
   markShips,
+  renderPreview,
   updateBoard,
   updateQueue,
 } from "./render.js";
@@ -32,6 +34,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   let direction = DIRECTIONS.H;
   let busy = false;
+  let previewKey = null;
 
   function parseKey(event) {
     return Number.parseInt(event.target.dataset.key, 10);
@@ -190,6 +193,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function onRotate() {
     direction = direction === DIRECTIONS.H ? DIRECTIONS.V : DIRECTIONS.H;
+    refreshPreview();
   }
 
   function onRestart() {
@@ -229,21 +233,47 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Your turn";
   }
 
-  function previewShip(event) {
-    if (controller.phase !== gamePhase.PLACE)
-      return { cells: [], valid: false };
-
-    const key = parseKey(event);
-    if (Number.isNaN(key)) return { cells: [], valid: false };
+  function refreshPreview() {
+    if (previewKey === null) return;
 
     const name = currentShip();
-    if (!name) return { cells: [], valid: false };
+    if (!name) {
+      clearPreview();
+      return;
+    }
 
     const ship = FLEET.find(({ name: shipName }) => shipName === name);
-    if (!ship) return { cells: [], valid: false };
+    if (!ship) {
+      clearPreview();
+      return;
+    }
 
     const gameboard = controller.getPlayer(0).gameboard;
-    return highlightShip(key, ship.length, direction, gameboard);
+    const { cells, valid } = highlightShip(
+      previewKey,
+      ship.length,
+      direction,
+      gameboard,
+    );
+    renderPreview(playerBoard, cells, valid);
+  }
+
+  function previewShip(event) {
+    if (controller.phase !== gamePhase.PLACE) {
+      previewKey = null;
+      clearPreview(playerBoard);
+      return;
+    }
+
+    const key = parseKey(event);
+    if (Number.isNaN(key)) {
+      previewKey = null;
+      clearPreview(playerBoard);
+      return;
+    }
+
+    previewKey = key;
+    refreshPreview();
   }
 
   // setup event listeners
@@ -253,6 +283,12 @@ export function init(controller, { playerBoard, enemyBoard }) {
   );
   playerBoard.addEventListener("pointerover", previewShip);
   playerBoard.addEventListener("focusin", previewShip);
+  playerBoard.addEventListener("pointerleave", clearPreview);
+  // clear preview when focus goes off board
+  playerBoard.addEventListener("focusout", (e) => {
+    if (playerBoard.contains(e.relatedTarget)) return;
+    clearPreview();
+  });
   enemyBoard.addEventListener("click", onClickAttack);
   enemyBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickAttack),
