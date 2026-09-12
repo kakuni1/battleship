@@ -1,5 +1,18 @@
 import { FLEET, SIZE } from "../constants.js";
 
+const SHIP_CLASSES = Object.freeze({
+  MISS: "miss",
+  HIT: "hit",
+  SUNK: "sunk",
+  PLACED: "placed",
+  SHIP: "ship",
+});
+
+const PREVIEW_CLASSES = Object.freeze({
+  VALID: "preview-valid",
+  INVALID: "preview-invalid",
+});
+
 export function createBoard() {
   const board = document.createElement("div");
   board.classList.add("board");
@@ -22,22 +35,26 @@ export function updateBoard(boardEl, gameboard) {
   for (const [key, cell] of boardEl.querySelectorAll(".cell").entries()) {
     const result = gameboard.resultAt(key);
     const sunk = gameboard.shipAt(key)?.isSunk ?? false;
-    if (result === "miss") cell.classList.add("miss");
-    if (result === "hit") cell.classList.add("hit");
-    if (sunk) cell.classList.add("sunk");
+    if (result === SHIP_CLASSES.MISS) cell.classList.add(SHIP_CLASSES.MISS);
+    if (result === SHIP_CLASSES.HIT) cell.classList.add(SHIP_CLASSES.HIT);
+    if (sunk) cell.classList.add(SHIP_CLASSES.SUNK);
   }
 }
 
 export function clearBoard(boardEl) {
-  for (const cell of boardEl.querySelectorAll(".cell"))
-    cell.classList.remove("miss", "hit", "sunk", "ship");
+  for (const cell of boardEl.querySelectorAll(".cell")) {
+    for (const shipClass of Object.values(SHIP_CLASSES))
+      cell.classList.remove(shipClass);
+    for (const previewClass of Object.values(PREVIEW_CLASSES))
+      cell.classList.remove(previewClass);
+  }
 }
 
 export function updateQueue(ulEl, gameboard) {
   const fleet = new Set();
   for (const ship of gameboard.fleetShips) fleet.add(ship.name);
   for (const li of ulEl.children)
-    li.classList.toggle("placed", fleet.has(li.dataset.name));
+    li.classList.toggle(SHIP_CLASSES.PLACED, fleet.has(li.dataset.name));
 }
 
 export function buildQueue(ulEl) {
@@ -52,5 +69,21 @@ export function buildQueue(ulEl) {
 export function markShips(boardEl, gameboard) {
   const shipKeys = new Set(gameboard.fleetShips.flatMap((ship) => ship.cells));
   for (const [key, cell] of boardEl.querySelectorAll(".cell").entries())
-    cell.classList.toggle("ship", shipKeys.has(key));
+    cell.classList.toggle(SHIP_CLASSES.SHIP, shipKeys.has(key));
+}
+
+export function clearPreview(boardEl) {
+  for (const cell of boardEl.querySelectorAll(".cell")) {
+    cell.classList.remove(PREVIEW_CLASSES.VALID);
+    cell.classList.remove(PREVIEW_CLASSES.INVALID);
+  }
+}
+
+export function renderPreview(boardEl, cells, valid) {
+  clearPreview(boardEl);
+  const className = valid ? PREVIEW_CLASSES.VALID : PREVIEW_CLASSES.INVALID;
+  for (const key of cells) {
+    const cell = boardEl.querySelector(`.cell[data-key="${key}"]`);
+    if (cell) cell.classList.add(className);
+  }
 }
