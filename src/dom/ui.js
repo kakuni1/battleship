@@ -1,5 +1,6 @@
 import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { gamePhase } from "../controller.js";
+import { fitsBoard, spanCells } from "../grid.js";
 import {
   buildQueue,
   clearBoard,
@@ -7,6 +8,16 @@ import {
   updateBoard,
   updateQueue,
 } from "./render.js";
+
+export function highlightShip(key, length, direction, gameboard) {
+  if (!Number.isInteger(key)) return { cells: [], valid: false };
+  if (!fitsBoard(key, length, direction)) return { cells: [], valid: false };
+
+  const cells = spanCells(key, length, direction);
+  const valid = cells.every((cell) => gameboard.isEmpty(cell));
+
+  return { cells, valid };
+}
 
 export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
@@ -218,11 +229,30 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Your turn";
   }
 
+  function previewShip(event) {
+    if (controller.phase !== gamePhase.PLACE)
+      return { cells: [], valid: false };
+
+    const key = parseKey(event);
+    if (Number.isNaN(key)) return { cells: [], valid: false };
+
+    const name = currentShip();
+    if (!name) return { cells: [], valid: false };
+
+    const ship = FLEET.find(({ name: shipName }) => shipName === name);
+    if (!ship) return { cells: [], valid: false };
+
+    const gameboard = controller.getPlayer(0).gameboard;
+    return highlightShip(key, ship.length, direction, gameboard);
+  }
+
   // setup event listeners
   playerBoard.addEventListener("click", onClickPlace);
   playerBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickPlace),
   );
+  playerBoard.addEventListener("pointerover", previewShip);
+  playerBoard.addEventListener("focusin", previewShip);
   enemyBoard.addEventListener("click", onClickAttack);
   enemyBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickAttack),
