@@ -11,3 +11,11 @@ export function fitsBoard(key, length, direction) {
   if (direction === "horizontal") return (key % SIZE) + length <= SIZE;
   if (direction === "vertical") return Math.floor(key / SIZE) + length <= SIZE;
 }
+
+export function calcRow(key) {
+  return Math.floor(key / SIZE);
+}
+
+export function calcCol(key) {
+  return key % SIZE;
+}
