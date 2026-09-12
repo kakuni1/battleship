@@ -193,6 +193,16 @@
   background: var(--color-sunk);
 }
 
+.preview-valid {
+  outline: 3px solid var(--color-valid);
+  outline-offset: -3px;
+}
+
+.preview-invalid {
+  outline: 3px solid var(--color-error);
+  outline-offset: -3px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .cell {
     transition: none;
