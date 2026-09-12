@@ -34,6 +34,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
   const placementEl = document.getElementById("placement-controls");
   const queueEl = document.getElementById("ship-queue");
+  const buttonUndoEl = document.getElementById("button-undo");
   const buttonRotateEl = document.getElementById("button-rotate");
   const buttonAutoEl = document.getElementById("button-auto");
   const buttonStartEl = document.getElementById("button-start");
@@ -89,6 +90,15 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
   }
 
+  function lastShip() {
+    const placed = new Set(
+      controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
+    );
+
+    // name of the last ship that was placed
+    return FLEET.findLast(({ name }) => placed.has(name))?.name;
+  }
+
   function currentShip() {
     const placed = new Set(
       controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
@@ -126,6 +136,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     repaint();
+    buttonUndoEl.disabled = false;
 
     // update status for active ship
     const next = currentShip();
@@ -213,6 +224,29 @@ export function init(controller, { playerBoard, enemyBoard }) {
     onRotate();
   }
 
+  function onUndo() {
+    const name = lastShip();
+
+    // conditions for immediate exit
+    if (controller.phase !== gamePhase.PLACE) return;
+    if (!name) return;
+
+    try {
+      controller.removeShip(0, name);
+    } catch (error) {
+      repaint();
+      statusEl.textContent = error.message;
+      return;
+    }
+
+    repaint();
+    buttonStartEl.disabled = true;
+    buttonUndoEl.disabled =
+      controller.getPlayer(0).gameboard.fleetShips.length === 0;
+    statusEl.textContent = `Place: ${currentShip()}`;
+    refreshPreview();
+  }
+
   function onRotate() {
     direction = direction === DIRECTIONS.H ? DIRECTIONS.V : DIRECTIONS.H;
     refreshPreview();
@@ -239,6 +273,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     repaint();
+    buttonUndoEl.disabled = false;
     buttonStartEl.disabled = false;
     statusEl.textContent = "Fleet ready";
   }
@@ -319,6 +354,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   enemyBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickAttack),
   );
+  buttonUndoEl.addEventListener("click", onUndo);
   buttonRotateEl.addEventListener("click", onRotate);
   buttonAutoEl.addEventListener("click", onAuto);
   buttonStartEl.addEventListener("click", onStart);
