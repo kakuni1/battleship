@@ -32,7 +32,7 @@ export function highlightShip(key, length, direction, gameboard) {
 
 export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
-  const placementEl = document.getElementById("placement-controls");
+  const gameEl = document.getElementById("game");
   const queueEl = document.getElementById("ship-queue");
   const buttonUndoEl = document.getElementById("button-undo");
   const buttonRotateEl = document.getElementById("button-rotate");
@@ -178,7 +178,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     // gameover check
     if (turn.gameOver) {
       winnerEl.textContent = controller.getPlayer(turn.winner).name;
-      gameoverEl.hidden = false;
+      syncPhase();
       repaint();
       return;
     }
@@ -205,7 +205,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     // gameover check
     if (cpuTurn.gameOver) {
       winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
-      gameoverEl.hidden = false;
+      syncPhase();
     }
 
     repaint();
@@ -255,11 +255,12 @@ export function init(controller, { playerBoard, enemyBoard }) {
   function onRestart() {
     controller.resetGame();
     repaint();
-    placementEl.hidden = false;
-    gameoverEl.hidden = true;
+    syncPhase();
+    clearPlayerPreview();
     direction = DIRECTIONS.H;
     busy = false;
     buttonStartEl.disabled = true;
+    buttonUndoEl.disabled = true;
     statusEl.textContent = "Place your Carrier";
   }
 
@@ -286,7 +287,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
       return;
     }
 
-    placementEl.hidden = true;
+    syncPhase();
     statusEl.textContent = "Your turn";
   }
 
@@ -336,6 +337,11 @@ export function init(controller, { playerBoard, enemyBoard }) {
     clearPreview(playerBoard);
   }
 
+  function syncPhase() {
+    gameEl.dataset.phase = controller.phase;
+    gameoverEl.hidden = !controller.isGameOver;
+  }
+
   // setup event listeners
   document.addEventListener("keydown", onPlacementKeyDown);
   playerBoard.addEventListener("click", onClickPlace);
@@ -363,6 +369,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   // one-time setup
   buildQueue(queueEl);
   repaint();
+  syncPhase();
   buttonStartEl.disabled = true;
   statusEl.textContent = "Place your Carrier";
 }

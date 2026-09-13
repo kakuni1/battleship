@@ -6,6 +6,7 @@ const SHIP_CLASSES = Object.freeze({
   SUNK: "sunk",
   PLACED: "placed",
   SHIP: "ship",
+  ACTIVE: "active",
 });
 
 const PREVIEW_CLASSES = Object.freeze({
@@ -52,9 +53,23 @@ export function clearBoard(boardEl) {
 
 export function updateQueue(ulEl, gameboard) {
   const fleet = new Set();
-  for (const ship of gameboard.fleetShips) fleet.add(ship.name);
-  for (const li of ulEl.children)
-    li.classList.toggle(SHIP_CLASSES.PLACED, fleet.has(li.dataset.name));
+  const sunk = new Set();
+
+  for (const ship of gameboard.fleetShips) {
+    fleet.add(ship.name);
+    if (ship.isSunk) sunk.add(ship.name);
+  }
+
+  let nextFound = false;
+  for (const li of ulEl.children) {
+    const name = li.dataset.name;
+    const isPlaced = fleet.has(name);
+    const isSunk = sunk.has(name);
+    li.classList.toggle(SHIP_CLASSES.PLACED, isPlaced);
+    li.classList.toggle(SHIP_CLASSES.SUNK, isSunk);
+    li.classList.toggle(SHIP_CLASSES.ACTIVE, !nextFound && !isPlaced);
+    nextFound = nextFound || !isPlaced;
+  }
 }
 
 export function buildQueue(ulEl) {

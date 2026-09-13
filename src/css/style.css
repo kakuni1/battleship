@@ -17,33 +17,6 @@
   }
 }
 
-@media (max-width: 700px) {
-  #game {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "controls"
-      "player-title"
-      "player-board"
-      "enemy-title"
-      "enemy-board";
-  }
-
-  #game:has(> #placement-controls[hidden]) {
-    grid-template-areas:
-      "player-title"
-      "player-board"
-      "enemy-title"
-      "enemy-board";
-  }
-}
-
-@media (max-width: 420px) {
-  #placement-controls button {
-    flex-basis: 100%;
-  }
-}
-
-#placement-controls[hidden],
 #gameover[hidden] {
   display: none;
 }
@@ -53,12 +26,44 @@
   gap: 1rem 1.5rem;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas:
-    "controls controls"
+    "panel panel"
     "player-title enemy-title"
-    "player-board enemy-board";
+    "player-board enemy-board"
+    "controls controls";
 }
 
-#placement-controls {
+#button-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 1rem;
+}
+
+#game[data-phase="play"] #button-actions,
+#game[data-phase="gameOver"] #button-actions,
+#game[data-phase="place"] #button-restart {
+  display: none;
+}
+
+#game[data-phase="place"] #ship-queue li.placed {
+  opacity: 0.75;
+}
+
+#game[data-phase="place"] #ship-queue li.active {
+  color: var(--color-text);
+  border-color: var(--color-text);
+}
+
+#game[data-phase="play"] #ship-queue li.sunk,
+#game[data-phase="gameOver"] #ship-queue li.sunk {
+  color: var(--color-sunk);
+  border-color: var(--color-sunk);
+  text-decoration: line-through;
+}
+
+#panel-controls {
   grid-area: controls;
   display: flex;
   align-items: center;
@@ -70,25 +75,32 @@
   border-radius: 0.25rem;
 }
 
+#ship-panel {
+  grid-area: panel;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+}
+
 #ship-queue {
   display: flex;
-  flex: 1 1 100%;
   flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
   gap: 0.5rem;
   list-style: none;
 }
 
 #ship-queue li {
   color: var(--color-muted);
-  border: 1px solid var(--color-border);
+  border: 2px solid var(--color-border);
   border-radius: 0.25rem;
   padding: 0.125rem 0.25rem;
   font-size: 0.8rem;
-}
-
-#ship-queue li.placed {
-  opacity: 0.65;
-  text-decoration: line-through;
 }
 
 #status {
@@ -116,6 +128,15 @@
   grid-area: enemy-title;
 }
 
+#game > #ship-panel > h3 {
+  color: var(--color-muted);
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  letter-spacing: 0.05rem;
+}
+
 #player-board {
   grid-area: player-board;
   min-width: 0;
@@ -124,12 +145,6 @@
 #enemy-board {
   grid-area: enemy-board;
   min-width: 0;
-}
-
-#game:has(> #placement-controls[hidden]) {
-  grid-template-areas:
-    "player-title enemy-title"
-    "player-board enemy-board";
 }
 
 .board {
@@ -189,7 +204,7 @@
   background: var(--color-error);
 }
 
-.sunk {
+.cell.sunk {
   background: var(--color-sunk);
 }
 
@@ -201,6 +216,25 @@
 .preview-invalid {
   outline: 3px solid var(--color-error);
   outline-offset: -3px;
+}
+
+@media (max-width: 700px) {
+  #game {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "panel"
+      "player-title"
+      "player-board"
+      "enemy-title"
+      "enemy-board"
+      "controls";
+  }
+}
+
+@media (max-width: 420px) {
+  #placement-controls button {
+    flex-basis: 100%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
