@@ -11,6 +11,17 @@ import {
   updateQueue,
 } from "./render.js";
 
+const BOARD_MESSAGE = Object.freeze({
+  PLAYER: "Your Fleet",
+  ENEMY: "Enemy Waters",
+});
+
+const BOARDS = Object.freeze({
+  PLAYER: "player",
+  ENEMY: "enemy",
+});
+let activeBoard = BOARDS.PLAYER;
+
 export function highlightShip(key, length, direction, gameboard) {
   if (!Number.isInteger(key)) return { cells: [], valid: false };
 
@@ -41,6 +52,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const gameoverEl = document.getElementById("gameover");
   const winnerEl = document.getElementById("winner");
   const buttonRestartEl = document.getElementById("button-restart");
+  const buttonToggleBoardEl = document.getElementById("button-toggle-board");
 
   let direction = DIRECTIONS.H;
   let busy = false;
@@ -256,6 +268,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
     controller.resetGame();
     repaint();
     syncPhase();
+    activeBoard = BOARDS.PLAYER;
+    syncBoard();
     clearPlayerPreview();
     direction = DIRECTIONS.H;
     busy = false;
@@ -288,6 +302,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     syncPhase();
+    activeBoard = BOARDS.PLAYER;
+    syncBoard();
     statusEl.textContent = "Your turn";
   }
 
@@ -337,9 +353,23 @@ export function init(controller, { playerBoard, enemyBoard }) {
     clearPreview(playerBoard);
   }
 
+  function syncBoard() {
+    gameEl.dataset.board = activeBoard;
+    buttonToggleBoardEl.textContent =
+      activeBoard === BOARDS.PLAYER
+        ? BOARD_MESSAGE.ENEMY
+        : BOARD_MESSAGE.PLAYER;
+  }
+
+  function onToggleBoard() {
+    activeBoard = activeBoard === BOARDS.PLAYER ? BOARDS.ENEMY : BOARDS.PLAYER;
+    syncBoard();
+  }
+
   function syncPhase() {
     gameEl.dataset.phase = controller.phase;
     gameoverEl.hidden = !controller.isGameOver;
+    buttonToggleBoardEl.hidden = controller.phase === gamePhase.PLACE;
   }
 
   // setup event listeners
@@ -360,6 +390,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   enemyBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickAttack),
   );
+  buttonToggleBoardEl.addEventListener("click", onToggleBoard);
   buttonUndoEl.addEventListener("click", onUndo);
   buttonRotateEl.addEventListener("click", onRotate);
   buttonAutoEl.addEventListener("click", onAuto);
@@ -370,6 +401,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   buildQueue(queueEl);
   repaint();
   syncPhase();
+  syncBoard();
   buttonStartEl.disabled = true;
   statusEl.textContent = "Place your Carrier";
 }
