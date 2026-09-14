@@ -14,7 +14,21 @@
     <main>
       <h1>Battleship</h1>
       <p id="status"></p>
-      <section id="game" data-phase="place">
+      <section id="menu">
+        <form id="menu-form">
+          <label id="label-name" for="player-name">Your name</label>
+          <input
+            id="player-name"
+            type="text"
+            maxlength="20"
+            autocomplete="off"
+            placeholder="Player 1"
+            autofocus
+          >
+          <button type="submit">Enter</button>
+        </form>
+      </section>
+      <section id="game" data-phase="menu">
         <div id="ship-panel">
           <h3>Ships</h3>
           <ul id="ship-queue"></ul>

@@ -3,6 +3,7 @@ import { autoFleet } from "./fleet.js";
 import { Player, PlayerType } from "./player.js";
 
 export const gamePhase = Object.freeze({
+  MENU: "menu",
   PLACE: "place",
   PLAY: "play",
   GAMEOVER: "gameOver",

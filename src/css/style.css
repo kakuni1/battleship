@@ -17,7 +17,35 @@
   }
 }
 
-#gameover[hidden] {
+#menu {
+  place-items: center;
+  padding-block: 3rem;
+}
+
+#menu form {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1.5rem;
+  background: var(--color-surface);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+}
+
+#menu input {
+  font: inherit;
+  font-size: 0.925rem;
+  color: var(--color-text);
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  border-radius: 0.25rem;
+  padding: 0.25rem 0.5rem;
+}
+
+#label-name {
+  text-align: center;
+}
+
+#game[data-phase="menu"] {
   display: none;
 }
 
@@ -226,6 +254,10 @@
 .preview-invalid {
   outline: 3px solid var(--color-error);
   outline-offset: -3px;
+}
+
+#gameover[hidden] {
+  display: none;
 }
 
 @media (max-width: 700px) {
