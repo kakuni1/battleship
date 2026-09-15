@@ -103,20 +103,20 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
   }
 
-  function lastShip() {
-    const placed = new Set(
+  function placedShipName() {
+    return new Set(
       controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
     );
+  }
 
+  function lastShip() {
+    const placed = placedShipName();
     // name of the last ship that was placed
     return FLEET.findLast(({ name }) => placed.has(name))?.name;
   }
 
   function currentShip() {
-    const placed = new Set(
-      controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
-    );
-
+    const placed = placedShipName();
     // name of first ship not yet placed
     return FLEET.find(({ name }) => !placed.has(name))?.name;
   }
