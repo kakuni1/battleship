@@ -64,8 +64,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
   }
 
   function moveFocus(board, key, rowDelta, colDelta) {
-    const row = Math.floor(key / SIZE) + rowDelta;
-    const col = (key % SIZE) + colDelta;
+    const row = calcRow(key) + rowDelta;
+    const col = calcCol(key) + colDelta;
     if (row < 0 || row >= SIZE || col < 0 || col >= SIZE) return;
 
     const next = board.querySelector(`.cell[data-key="${row * SIZE + col}"]`);
