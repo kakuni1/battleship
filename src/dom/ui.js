@@ -52,6 +52,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const gameoverEl = document.getElementById("gameover");
   const winnerEl = document.getElementById("winner");
   const buttonRestartEl = document.getElementById("button-restart");
+  const buttonAgainEl = document.getElementById("button-again");
   const buttonToggleBoardEl = document.getElementById("button-toggle-board");
 
   let direction = DIRECTIONS.H;
@@ -357,8 +358,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function syncPhase() {
     gameEl.dataset.phase = controller.phase;
-    gameoverEl.hidden = !controller.isGameOver;
-    buttonToggleBoardEl.hidden = controller.phase === GAMEPHASE.PLACE;
+    if (controller.isGameOver) gameoverEl.showModal();
+    else gameoverEl.close();
   }
 
   // setup event listeners
@@ -385,6 +386,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   buttonAutoEl.addEventListener("click", onAuto);
   buttonStartEl.addEventListener("click", onStart);
   buttonRestartEl.addEventListener("click", onRestart);
+  buttonAgainEl.addEventListener("click", onRestart);
 
   // one-time setup
   buildQueue(queueEl);

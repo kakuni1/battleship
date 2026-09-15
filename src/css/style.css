@@ -213,16 +213,21 @@
   outline-offset: 2px;
 }
 
-#gameover {
+#gameover[open] {
   display: grid;
-  grid-column: 1 / -1;
   justify-items: center;
   gap: 1rem;
   padding: 1.5rem;
+  width: 15rem;
   background: var(--color-surface);
   border: 2px solid var(--color-border);
   border-radius: 0.25rem;
   text-align: center;
+  margin: auto;
+}
+
+#gameover::backdrop {
+  background: rgb(0 0 0 / 35%);
 }
 
 #winner {
@@ -254,10 +259,6 @@
 .preview-invalid {
   outline: 3px solid var(--color-error);
   outline-offset: -3px;
-}
-
-#gameover[hidden] {
-  display: none;
 }
 
 @media (max-width: 700px) {
