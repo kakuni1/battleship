@@ -260,26 +260,39 @@ describe("GameController", () => {
     );
   });
 
-  it("playTurn, alternate 'real' & 'cpu' turns", () => {
+  it("playTurn, keep turn on 'hit', swap on 'miss'", () => {
     const game = new GameController(
-      "Player 1",
-      "Computer",
+      "Alice",
+      "Bob",
       PlayerType.REAL,
-      PlayerType.CPU,
+      PlayerType.REAL,
     );
-    game.autoPlace(0);
+    game.placeShip(0, 0, "Carrier", "horizontal");
+    game.placeShip(0, 10, "Battleship", "horizontal");
+    game.placeShip(0, 20, "Cruiser", "horizontal");
+    game.placeShip(0, 30, "Submarine", "horizontal");
+    game.placeShip(0, 40, "Destroyer", "horizontal");
+    game.placeShip(1, 0, "Carrier", "horizontal");
+    game.placeShip(1, 10, "Battleship", "horizontal");
+    game.placeShip(1, 20, "Cruiser", "horizontal");
+    game.placeShip(1, 30, "Submarine", "horizontal");
+    game.placeShip(1, 40, "Destroyer", "horizontal");
     game.startGame();
 
-    const realTurn = game.playTurn(0);
-    expect(realTurn.attacker).toBe(0);
-    expect(realTurn.targetKey).toBe(0);
+    // miss swaps turns
+    game.playTurn(99);
     expect(game.activePlayer).toBe(1);
+    game.playTurn(98);
+    expect(game.activePlayer).toBe(0);
 
-    const cpuTurn = game.playTurn(0);
-    expect(cpuTurn.attacker).toBe(1);
-    expect(Number.isInteger(cpuTurn.targetKey)).toBe(true);
-    expect(cpuTurn.targetKey).toBeGreaterThanOrEqual(0);
-    expect(cpuTurn.targetKey).toBeLessThanOrEqual(99);
+    // hit keeps turn
+    const hit = game.playTurn(0);
+    expect(hit.result).toBe("hit");
+    expect(game.activePlayer).toBe(0);
+
+    // duplicate rejects the turn too
+    const dupe = game.playTurn(0);
+    expect(dupe.result).toBe("duplicate");
     expect(game.activePlayer).toBe(0);
   });
 
@@ -354,11 +367,26 @@ describe("GameController", () => {
   });
 
   it("playTurn, duplicate attack, return 'duplicate', reject turn", () => {
-    const game = new GameController();
-    game.autoPlace(0);
+    const game = new GameController(
+      "Alice",
+      "Bob",
+      PlayerType.REAL,
+      PlayerType.REAL,
+    );
+    game.placeShip(0, 0, "Carrier", "horizontal");
+    game.placeShip(0, 10, "Battleship", "horizontal");
+    game.placeShip(0, 20, "Cruiser", "horizontal");
+    game.placeShip(0, 30, "Submarine", "horizontal");
+    game.placeShip(0, 40, "Destroyer", "horizontal");
+    game.placeShip(1, 0, "Carrier", "horizontal");
+    game.placeShip(1, 10, "Battleship", "horizontal");
+    game.placeShip(1, 20, "Cruiser", "horizontal");
+    game.placeShip(1, 30, "Submarine", "horizontal");
+    game.placeShip(1, 40, "Destroyer", "horizontal");
     game.startGame();
-    game.playTurn(0);
-    game.playTurn(0);
+
+    const first = game.playTurn(0);
+    expect(first.result).toBe("hit");
     expect(game.playTurn(0)).toEqual({
       attacker: 0,
       targetKey: 0,
@@ -384,16 +412,18 @@ describe("GameController", () => {
     game.startGame();
 
     let turn = 0;
+    let last;
     while (!game.isGameOver) {
-      game.playTurn(0);
+      last = game.playTurn(0).attacker;
       turn += 1;
     }
 
-    expect(turn).toBeGreaterThanOrEqual(33);
+    // min turns, 17 ship cells, hits keep the turn
+    expect(turn).toBeGreaterThanOrEqual(17);
     expect(turn).toBeLessThanOrEqual(200);
     expect([0, 1]).toContain(game.winner);
-    // player 0 returns 1, player 1 returns 0
-    expect(turn % 2).toBe(game.winner === 0 ? 1 : 0);
+    // winner, fires the final shot
+    expect(last).toBe(game.winner);
     expect(game.phase).toBe("gameOver");
 
     const winner = game.getPlayer(game.winner);

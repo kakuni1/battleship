@@ -1,5 +1,5 @@
 import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
-import { gamePhase } from "../controller.js";
+import { GAMEPHASE, SHIP_STATES } from "../controller.js";
 import { calcCol, calcRow, fitsBoard, spanCells } from "../grid.js";
 import {
   buildQueue,
@@ -135,7 +135,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     const name = currentShip();
 
     // conditions for immediate exit
-    if (controller.phase !== gamePhase.PLACE) return;
+    if (controller.phase !== GAMEPHASE.PLACE) return;
     if (Number.isNaN(key)) return;
     if (!name) return;
     if (busy) return;
@@ -166,60 +166,49 @@ export function init(controller, { playerBoard, enemyBoard }) {
     const key = parseKey(event);
 
     // conditions for immediate exit
-    if (controller.phase !== gamePhase.PLAY) return;
+    if (controller.phase !== GAMEPHASE.PLAY) return;
     if (Number.isNaN(key)) return;
     if (busy) return;
 
     // player turn
     busy = true;
     const turn = controller.playTurn(key);
-    if (turn.result === "duplicate") {
+    if (turn.result === SHIP_STATES.DUPLICATE)
       statusEl.textContent = "Already attacked";
-      busy = false;
-      return;
-    }
-    if (turn.result === "hit") {
+    else if (turn.result === SHIP_STATES.HIT)
       statusEl.textContent = `You hit ${turn.ship}!`;
-      busy = false;
-    }
-    if (turn.result === "miss") {
-      statusEl.textContent = "You missed";
-      busy = false;
-    }
+    else statusEl.textContent = "You missed";
 
     // gameover check
     if (turn.gameOver) {
       winnerEl.textContent = controller.getPlayer(turn.winner).name;
       syncPhase();
-      repaint();
-      return;
     }
 
-    // cpu turn
-    busy = true;
-    const cpuTurn = controller.playTurn();
+    // cpu, keeps turn on 'hit'
+    while (controller.activePlayer === 1 && !controller.isGameOver) {
+      const cpuTurn = controller.playTurn();
 
-    // duplicate should never occur for cpu, defensive measure
-    if (cpuTurn.result === "duplicate") {
-      statusEl.textContent = "CPU, already attacked";
-      busy = false;
-      return;
-    }
-    if (cpuTurn.result === "hit") {
-      statusEl.textContent = `CPU hit your ${cpuTurn.ship}!`;
-      busy = false;
-    }
-    if (cpuTurn.result === "miss") {
-      statusEl.textContent = "CPU missed";
-      busy = false;
-    }
+      // duplicate should never occur for cpu, defensive measure
+      if (cpuTurn.result === SHIP_STATES.DUPLICATE) {
+        statusEl.textContent = "CPU, already attacked";
+        break;
+      }
 
-    // gameover check
-    if (cpuTurn.gameOver) {
-      winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
-      syncPhase();
+      if (cpuTurn.result === SHIP_STATES.HIT) {
+        statusEl.textContent = `CPU hit your ${cpuTurn.ship}!`;
+      } else {
+        statusEl.textContent = "CPU missed";
+      }
+
+      // gameover check
+      if (cpuTurn.gameOver) {
+        winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
+        syncPhase();
+      }
     }
 
+    busy = false;
     repaint();
   }
 
@@ -230,7 +219,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
       !event.altKey &&
       !event.metaKey;
 
-    if (!isRotateKey || controller.phase !== gamePhase.PLACE) return;
+    if (!isRotateKey || controller.phase !== GAMEPHASE.PLACE) return;
 
     event.preventDefault();
     onRotate();
@@ -240,7 +229,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     const name = lastShip();
 
     // conditions for immediate exit
-    if (controller.phase !== gamePhase.PLACE) return;
+    if (controller.phase !== GAMEPHASE.PLACE) return;
     if (!name) return;
 
     try {
@@ -333,7 +322,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   }
 
   function previewShip(event) {
-    if (controller.phase !== gamePhase.PLACE) {
+    if (controller.phase !== GAMEPHASE.PLACE) {
       clearPlayerPreview();
       return;
     }
@@ -369,7 +358,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   function syncPhase() {
     gameEl.dataset.phase = controller.phase;
     gameoverEl.hidden = !controller.isGameOver;
-    buttonToggleBoardEl.hidden = controller.phase === gamePhase.PLACE;
+    buttonToggleBoardEl.hidden = controller.phase === GAMEPHASE.PLACE;
   }
 
   // setup event listeners
