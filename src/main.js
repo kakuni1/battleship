@@ -22,6 +22,9 @@ function start(name) {
 menuFormEl.addEventListener("submit", (event) => {
   event.preventDefault();
   const name = nameInputEl.value.trim() || "Player 1";
-  document.getElementById("menu").remove();
-  start(name);
+  // menu to game transition
+  document.startViewTransition(() => {
+    document.getElementById("menu").remove();
+    start(name);
+  });
 });

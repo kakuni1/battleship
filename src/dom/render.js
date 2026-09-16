@@ -51,7 +51,7 @@ export function clearBoard(boardEl) {
   }
 }
 
-export function updateQueue(ulEl, gameboard) {
+export function updateQueue(ulEl, gameboard, activeName = null) {
   const fleet = new Set();
   const sunk = new Set();
 
@@ -60,23 +60,24 @@ export function updateQueue(ulEl, gameboard) {
     if (ship.isSunk) sunk.add(ship.name);
   }
 
-  let nextFound = false;
-  for (const li of ulEl.children) {
-    const name = li.dataset.name;
+  for (const button of ulEl.querySelectorAll("button")) {
+    const name = button.dataset.name;
     const isPlaced = fleet.has(name);
     const isSunk = sunk.has(name);
-    li.classList.toggle(SHIP_CLASSES.PLACED, isPlaced);
-    li.classList.toggle(SHIP_CLASSES.SUNK, isSunk);
-    li.classList.toggle(SHIP_CLASSES.ACTIVE, !nextFound && !isPlaced);
-    nextFound = nextFound || !isPlaced;
+    button.classList.toggle(SHIP_CLASSES.PLACED, isPlaced);
+    button.classList.toggle(SHIP_CLASSES.SUNK, isSunk);
+    button.classList.toggle(SHIP_CLASSES.ACTIVE, name === activeName);
   }
 }
 
 export function buildQueue(ulEl) {
   for (const { name } of FLEET) {
     const li = document.createElement("li");
-    li.textContent = name;
-    li.dataset.name = name;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = name;
+    button.dataset.name = name;
+    li.appendChild(button);
     ulEl.appendChild(li);
   }
 }

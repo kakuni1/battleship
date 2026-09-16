@@ -58,6 +58,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   let direction = DIRECTIONS.H;
   let busy = false;
   let previewKey = null;
+  let selectedShip = null;
 
   function parseKey(event) {
     return Number.parseInt(event.target.dataset.key, 10);
@@ -103,22 +104,29 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
   }
 
-  function placedShipName() {
+  function placedShipNames() {
     return new Set(
       controller.getPlayer(0).gameboard.fleetShips.map((ship) => ship.name),
     );
   }
 
   function lastShip() {
-    const placed = placedShipName();
+    const placed = placedShipNames();
     // name of the last ship that was placed
     return FLEET.findLast(({ name }) => placed.has(name))?.name;
   }
 
-  function currentShip() {
-    const placed = placedShipName();
+  function firstUnplacedShip() {
+    const placed = placedShipNames();
     // name of first ship not yet placed
     return FLEET.find(({ name }) => !placed.has(name))?.name;
+  }
+
+  function currentShip() {
+    const placed = placedShipNames();
+    // name of selected ship via click or default to fleet list
+    if (selectedShip !== null && !placed.has(selectedShip)) return selectedShip;
+    else return firstUnplacedShip();
   }
 
   function repaint() {
@@ -128,7 +136,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     // show ships for player only, keep enemy ships hidden (fog-of-war)
     markShips(playerBoard, controller.getPlayer(0).gameboard);
     updateBoard(enemyBoard, controller.getPlayer(1).gameboard);
-    updateQueue(queueEl, controller.getPlayer(0).gameboard);
+    updateQueue(queueEl, controller.getPlayer(0).gameboard, currentShip());
   }
 
   function onClickPlace(event) {
@@ -277,6 +285,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
       return;
     }
 
+    selectedShip = null;
     repaint();
     buttonUndoEl.disabled = false;
     buttonStartEl.disabled = false;
@@ -295,6 +304,20 @@ export function init(controller, { playerBoard, enemyBoard }) {
     activeBoard = BOARDS.PLAYER;
     syncBoard();
     statusEl.textContent = "Your turn";
+  }
+
+  function onSelect(event) {
+    const button = event.target.closest("button[data-name]");
+
+    // conditions for immediate exit
+    if (!button) return;
+    if (placedShipNames().has(button.dataset.name)) return;
+    if (controller.phase !== GAMEPHASE.PLACE) return;
+
+    selectedShip = button.dataset.name;
+    statusEl.textContent = `Place: ${selectedShip}`;
+    updateQueue(queueEl, controller.getPlayer(0).gameboard, currentShip());
+    refreshPreview();
   }
 
   function refreshPreview() {
@@ -358,6 +381,9 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function syncPhase() {
     gameEl.dataset.phase = controller.phase;
+    const interact = controller.phase === GAMEPHASE.PLACE;
+    for (const button of queueEl.querySelectorAll("button"))
+      button.disabled = !interact;
     if (controller.isGameOver) gameoverEl.showModal();
     else gameoverEl.close();
   }
@@ -380,6 +406,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   enemyBoard.addEventListener("keydown", (e) =>
     onBoardKeyDown(e, onClickAttack),
   );
+  queueEl.addEventListener("click", onSelect);
   buttonToggleBoardEl.addEventListener("click", onToggleBoard);
   buttonUndoEl.addEventListener("click", onUndo);
   buttonRotateEl.addEventListener("click", onRotate);
