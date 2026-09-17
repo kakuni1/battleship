@@ -87,7 +87,7 @@
 }
 
 #game[data-phase="place"] #ship-queue button.placed {
-  opacity: 0.75;
+  opacity: 0.35;
   animation: place-pop 200ms ease-out;
 }
 

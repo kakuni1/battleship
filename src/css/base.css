@@ -73,7 +73,7 @@ button {
   background: var(--color-surface);
   border: 2px solid var(--color-border);
   border-radius: 0.25rem;
-  padding: 0.15rem 0.25rem;
+  padding: 0.15rem 0.5rem;
   font: inherit;
   font-size: 0.825rem;
   font-weight: 600;
@@ -83,7 +83,7 @@ button {
     border-color 150ms ease,
     color 150ms ease,
     opacity 150ms ease,
-    transform 150ms ease;
+    transform 240ms ease-in-out;
 }
 
 button .lucide {
@@ -100,8 +100,8 @@ button:hover:not(:disabled) {
 }
 
 button:active:not(:disabled) {
-  transform: translateX(0.15rem) translateY(-0.075rem) scale(0.95)
-    rotate(1.25deg);
+  transition-duration: 60ms;
+  transform: translateY(1px) scale(0.99);
 }
 
 button:disabled {
