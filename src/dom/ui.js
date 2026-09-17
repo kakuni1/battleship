@@ -2,9 +2,9 @@ import {
   createIcons,
   icons,
 } from "https://cdn.jsdelivr.net/npm/lucide@1.46.0/+esm";
-import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
+import { CPU_DELAY_MS, DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { GAMEPHASE, SHIP_STATES } from "../controller.js";
-import { calcCol, calcRow, fitsBoard, spanCells } from "../grid.js";
+import { calcCol, calcRow, fitsBoard, sleep, spanCells } from "../grid.js";
 import {
   buildQueue,
   clearBoard,
@@ -175,7 +175,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Fleet ready";
   }
 
-  function onClickAttack(event) {
+  async function onClickAttack(event) {
     const key = parseKey(event);
 
     // conditions for immediate exit
@@ -198,8 +198,11 @@ export function init(controller, { playerBoard, enemyBoard }) {
       syncPhase();
     }
 
+    repaint();
+
     // cpu, keeps turn on 'hit'
     while (controller.activePlayer === 1 && !controller.isGameOver) {
+      await sleep(CPU_DELAY_MS);
       const cpuTurn = controller.playTurn();
 
       // duplicate should never occur for cpu, defensive measure
@@ -219,6 +222,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
         winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
         syncPhase();
       }
+
+      repaint();
     }
 
     busy = false;

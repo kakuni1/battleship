@@ -1,4 +1,5 @@
 export const SIZE = 10;
+export const CPU_DELAY_MS = 2000;
 export const DIRECTIONS = Object.freeze({
   H: "horizontal",
   V: "vertical",

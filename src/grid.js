@@ -19,3 +19,7 @@ export function calcRow(key) {
 export function calcCol(key) {
   return key % SIZE;
 }
+
+export function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
