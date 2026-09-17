@@ -1,3 +1,7 @@
+import {
+  createIcons,
+  icons,
+} from "https://cdn.jsdelivr.net/npm/lucide@1.46.0/+esm";
 import { DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { GAMEPHASE, SHIP_STATES } from "../controller.js";
 import { calcCol, calcRow, fitsBoard, spanCells } from "../grid.js";
@@ -417,6 +421,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   // one-time setup
   buildQueue(queueEl);
+  createIcons({ icons, root: queueEl });
   repaint();
   syncPhase();
   syncBoard();

@@ -1,7 +1,12 @@
+import {
+  createIcons,
+  icons,
+} from "https://cdn.jsdelivr.net/npm/lucide@1.46.0/+esm";
 import { GameController } from "./controller.js";
 import { createBoard } from "./dom/render.js";
 import { init } from "./dom/ui.js";
 
+createIcons({ icons });
 const menuFormEl = document.getElementById("menu-form");
 const nameInputEl = document.getElementById("player-name");
 

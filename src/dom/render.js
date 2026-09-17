@@ -75,7 +75,9 @@ export function buildQueue(ulEl) {
     const li = document.createElement("li");
     const button = document.createElement("button");
     button.type = "button";
-    button.textContent = name;
+    const icon = document.createElement("i");
+    icon.dataset.lucide = "sailboat";
+    button.append(icon, name);
     button.dataset.name = name;
     li.appendChild(button);
     ulEl.appendChild(li);
