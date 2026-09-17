@@ -2,6 +2,19 @@ import { describe, expect, it } from "vitest";
 import { GameController } from "./controller.js";
 import { PlayerType } from "./player.js";
 
+const FLEET_NAMES = [
+  "Carrier",
+  "Battleship",
+  "Cruiser",
+  "Submarine",
+  "Destroyer",
+];
+
+function placeFleet(game, index) {
+  for (const [i, name] of FLEET_NAMES.entries())
+    game.placeShip(index, i * 10, name, "horizontal");
+}
+
 describe("GameController", () => {
   it("return, player info", () => {
     const game = new GameController();
@@ -39,18 +52,20 @@ describe("GameController", () => {
 
   it("removeShip, not in 'place' phase, throw error", () => {
     const game = new GameController();
-    game.autoPlace(0);
+    placeFleet(game, 0);
     game.startGame();
     expect(() => game.removeShip(0, "Destroyer")).toThrow(
       "controller removeShip, not in 'place' phase",
     );
   });
 
-  it("autoPlace, reset board & randomly place (5) ships", () => {
+  it("resetBoard, clear placed ships", () => {
     const game = new GameController();
-    game.autoPlace(0);
-    expect(game.getPlayer(0).gameboard.fleetDone).toBe(true);
-    expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(5);
+    game.placeShip(0, 0, "Carrier", "horizontal");
+    game.resetBoard(0);
+    expect(game.getPlayer(0).gameboard.fleetDone).toBe(false);
+    expect(game.getPlayer(0).gameboard.fleetShips.length).toBe(0);
+    expect(game.getPlayer(0).gameboard.shipAt(0)).toBeNull();
   });
 
   it("startGame, real & cpu, real fleet incomplete, throw error", () => {
@@ -62,19 +77,19 @@ describe("GameController", () => {
 
   it("startGame, game phase already in 'play', throw error", () => {
     const game = new GameController();
-    game.autoPlace(0);
+    placeFleet(game, 0);
     game.startGame();
     expect(() => game.startGame()).toThrow(
       "controller start game, not in 'place' phase",
     );
   });
 
-  it("startGame, autoPlace after game start, throw error", () => {
+  it("startGame, resetBoard after game start, throw error", () => {
     const game = new GameController();
-    game.autoPlace(0);
+    placeFleet(game, 0);
     game.startGame();
-    expect(() => game.autoPlace(0)).toThrow(
-      "controller autoPlace, not in 'place' phase",
+    expect(() => game.resetBoard(0)).toThrow(
+      "controller resetBoard, not in 'place' phase",
     );
   });
 
@@ -118,7 +133,7 @@ describe("GameController", () => {
 
   it("startGame, game state ready", () => {
     const game = new GameController();
-    game.autoPlace(0);
+    placeFleet(game, 0);
     game.startGame();
     expect(game.getPlayer(0).gameboard.fleetDone).toBe(true);
     expect(game.getPlayer(1).gameboard.fleetDone).toBe(true);
@@ -303,8 +318,8 @@ describe("GameController", () => {
       PlayerType.REAL,
       PlayerType.REAL,
     );
-    game.autoPlace(0);
-    game.autoPlace(1);
+    placeFleet(game, 0);
+    placeFleet(game, 1);
     game.startGame();
     game.playTurn(0);
     game.resetGame();

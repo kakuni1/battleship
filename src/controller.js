@@ -60,12 +60,17 @@ export class GameController {
     return this.getPlayer(index).gameboard.removeShip(name);
   }
 
-  autoPlace(index) {
+  resetBoard(index) {
     if (this.phase !== GAMEPHASE.PLACE)
-      throw new Error("controller autoPlace, not in 'place' phase");
+      throw new Error("controller resetBoard, not in 'place' phase");
 
+    return this.getPlayer(index).gameboard.reset();
+  }
+
+  #autoPlace(index) {
     const board = this.getPlayer(index).gameboard;
     board.reset();
+
     return autoFleet(board);
   }
 
@@ -76,8 +81,8 @@ export class GameController {
     const active = this.getPlayer(this.activePlayer);
     const opponent = this.getPlayer(this.opponentPlayer);
 
-    if (active.type === PlayerType.CPU) this.autoPlace(this.activePlayer);
-    if (opponent.type === PlayerType.CPU) this.autoPlace(this.opponentPlayer);
+    if (active.type === PlayerType.CPU) this.#autoPlace(this.activePlayer);
+    if (opponent.type === PlayerType.CPU) this.#autoPlace(this.opponentPlayer);
     if (
       active.gameboard.fleetDone !== true ||
       opponent.gameboard.fleetDone !== true

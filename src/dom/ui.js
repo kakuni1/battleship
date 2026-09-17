@@ -51,7 +51,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const queueEl = document.getElementById("ship-queue");
   const buttonUndoEl = document.getElementById("button-undo");
   const buttonRotateEl = document.getElementById("button-rotate");
-  const buttonAutoEl = document.getElementById("button-auto");
+  const buttonResetEl = document.getElementById("button-reset");
   const buttonStartEl = document.getElementById("button-start");
   const gameoverEl = document.getElementById("gameover");
   const winnerEl = document.getElementById("winner");
@@ -285,9 +285,9 @@ export function init(controller, { playerBoard, enemyBoard }) {
     statusEl.textContent = "Place your Carrier";
   }
 
-  function onAuto() {
+  function onReset() {
     try {
-      controller.autoPlace(0);
+      controller.resetBoard(0);
     } catch (error) {
       repaint();
       statusEl.textContent = error.message;
@@ -295,10 +295,12 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     selectedShip = null;
+    clearPlayerPreview();
     repaint();
-    buttonUndoEl.disabled = false;
-    buttonStartEl.disabled = false;
-    statusEl.textContent = "Fleet ready";
+    direction = DIRECTIONS.H;
+    buttonUndoEl.disabled = true;
+    buttonStartEl.disabled = true;
+    statusEl.textContent = "Place your Carrier";
   }
 
   function onStart() {
@@ -419,7 +421,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   buttonToggleBoardEl.addEventListener("click", onToggleBoard);
   buttonUndoEl.addEventListener("click", onUndo);
   buttonRotateEl.addEventListener("click", onRotate);
-  buttonAutoEl.addEventListener("click", onAuto);
+  buttonResetEl.addEventListener("click", onReset);
   buttonStartEl.addEventListener("click", onStart);
   buttonRestartEl.addEventListener("click", onRestart);
   buttonAgainEl.addEventListener("click", onRestart);
