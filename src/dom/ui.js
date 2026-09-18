@@ -191,8 +191,8 @@ export function init(controller, { playerBoard, enemyBoard }) {
     if (turn.result === SHIP_STATES.DUPLICATE)
       statusEl.textContent = "Already attacked";
     else if (turn.result === SHIP_STATES.HIT)
-      statusEl.textContent = `You hit ${turn.ship}!`;
-    else statusEl.textContent = "You missed";
+      statusEl.textContent = `${controller.getPlayer(0).name} hit ${turn.ship}!`;
+    else statusEl.textContent = `${controller.getPlayer(0).name} missed`;
 
     syncTurn();
 
@@ -221,14 +221,14 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
       // duplicate should never occur for cpu, defensive measure
       if (cpuTurn.result === SHIP_STATES.DUPLICATE) {
-        statusEl.textContent = "CPU, already attacked";
+        statusEl.textContent = `${controller.getPlayer(1).name}, already attacked`;
         break;
       }
 
       if (cpuTurn.result === SHIP_STATES.HIT) {
-        statusEl.textContent = `CPU hit your ${cpuTurn.ship}!`;
+        statusEl.textContent = `${controller.getPlayer(1).name} hit your ${cpuTurn.ship}!`;
       } else {
-        statusEl.textContent = "CPU missed";
+        statusEl.textContent = `${controller.getPlayer(1).name} missed`;
       }
 
       syncTurn();
@@ -240,6 +240,10 @@ export function init(controller, { playerBoard, enemyBoard }) {
       }
 
       repaint();
+
+      // keep cpu message
+      if (cpuTurn.result === SHIP_STATES.HIT && !controller.isGameOver)
+        await sleep(DELAY_MS.PLAYER);
     }
 
     await sleep(DELAY_MS.PLAYER);
@@ -412,7 +416,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     turnStatusEl.hidden = false;
     turnStatusEl.textContent =
       controller.activePlayer === 0
-        ? "Your turn"
+        ? `${controller.getPlayer(0).name}'s turn`
         : `${activePlayer.name}'s turn`;
   }
 
