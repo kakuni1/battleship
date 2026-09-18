@@ -2,7 +2,7 @@ import {
   createIcons,
   icons,
 } from "https://cdn.jsdelivr.net/npm/lucide@1.46.0/+esm";
-import { CPU_DELAY_MS, DIRECTIONS, FLEET, SIZE } from "../constants.js";
+import { DELAY_MS, DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { GAMEPHASE, SHIP_STATES } from "../controller.js";
 import { calcCol, calcRow, fitsBoard, sleep, spanCells } from "../grid.js";
 import {
@@ -58,6 +58,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   const buttonRestartEl = document.getElementById("button-restart");
   const buttonAgainEl = document.getElementById("button-again");
   const buttonToggleBoardEl = document.getElementById("button-toggle-board");
+  const boardLabelNode = buttonToggleBoardEl.lastChild;
 
   let direction = DIRECTIONS.H;
   let busy = false;
@@ -199,10 +200,19 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     repaint();
+    // extra delay for single board setup
+    if (
+      !controller.isGameOver &&
+      turn.result !== SHIP_STATES.HIT &&
+      turn.result !== SHIP_STATES.DUPLICATE
+    )
+      await sleep(DELAY_MS.PLAYER);
 
     // cpu, keeps turn on 'hit'
     while (controller.activePlayer === 1 && !controller.isGameOver) {
-      await sleep(CPU_DELAY_MS);
+      activeBoard = BOARDS.PLAYER;
+      syncBoard();
+      await sleep(DELAY_MS.CPU);
       const cpuTurn = controller.playTurn();
 
       // duplicate should never occur for cpu, defensive measure
@@ -226,7 +236,10 @@ export function init(controller, { playerBoard, enemyBoard }) {
       repaint();
     }
 
+    await sleep(DELAY_MS.PLAYER);
     busy = false;
+    activeBoard = BOARDS.ENEMY;
+    syncBoard();
     repaint();
   }
 
@@ -312,7 +325,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     }
 
     syncPhase();
-    activeBoard = BOARDS.PLAYER;
+    activeBoard = BOARDS.ENEMY;
     syncBoard();
     statusEl.textContent = "Your turn";
   }
@@ -379,7 +392,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function syncBoard() {
     gameEl.dataset.board = activeBoard;
-    buttonToggleBoardEl.textContent =
+    boardLabelNode.nodeValue =
       activeBoard === BOARDS.PLAYER
         ? BOARD_MESSAGE.ENEMY
         : BOARD_MESSAGE.PLAYER;
@@ -393,6 +406,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
   function syncPhase() {
     gameEl.dataset.phase = controller.phase;
     const interact = controller.phase === GAMEPHASE.PLACE;
+    buttonToggleBoardEl.hidden = interact;
     for (const button of queueEl.querySelectorAll("button"))
       button.disabled = !interact;
     if (controller.isGameOver) gameoverEl.showModal();
