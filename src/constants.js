@@ -1,7 +1,7 @@
 export const SIZE = 10;
 export const DELAY_MS = Object.freeze({
-  CPU: 2000,
-  PLAYER: 2000,
+  CPU: 1000,
+  PLAYER: 1000,
 });
 export const DIRECTIONS = Object.freeze({
   H: "horizontal",

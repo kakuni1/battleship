@@ -47,6 +47,7 @@ export function highlightShip(key, length, direction, gameboard) {
 
 export function init(controller, { playerBoard, enemyBoard }) {
   const statusEl = document.getElementById("status");
+  const turnStatusEl = document.getElementById("turn-status");
   const gameEl = document.getElementById("game");
   const queueEl = document.getElementById("ship-queue");
   const buttonUndoEl = document.getElementById("button-undo");
@@ -193,9 +194,11 @@ export function init(controller, { playerBoard, enemyBoard }) {
       statusEl.textContent = `You hit ${turn.ship}!`;
     else statusEl.textContent = "You missed";
 
+    syncTurn();
+
     // gameover check
     if (turn.gameOver) {
-      winnerEl.textContent = controller.getPlayer(turn.winner).name;
+      winnerEl.textContent = `${controller.getPlayer(turn.winner).name} wins!`;
       syncPhase();
     }
 
@@ -210,6 +213,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
     // cpu, keeps turn on 'hit'
     while (controller.activePlayer === 1 && !controller.isGameOver) {
+      statusEl.textContent = `${controller.getPlayer(controller.activePlayer).name} is thinking`;
       activeBoard = BOARDS.PLAYER;
       syncBoard();
       await sleep(DELAY_MS.CPU);
@@ -227,9 +231,11 @@ export function init(controller, { playerBoard, enemyBoard }) {
         statusEl.textContent = "CPU missed";
       }
 
+      syncTurn();
+
       // gameover check
       if (cpuTurn.gameOver) {
-        winnerEl.textContent = controller.getPlayer(cpuTurn.winner).name;
+        winnerEl.textContent = `${controller.getPlayer(cpuTurn.winner).name} wins!`;
         syncPhase();
       }
 
@@ -295,7 +301,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     busy = false;
     buttonStartEl.disabled = true;
     buttonUndoEl.disabled = true;
-    statusEl.textContent = "Place your Carrier";
+    statusEl.textContent = "Place: Carrier";
   }
 
   function onReset() {
@@ -313,7 +319,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     direction = DIRECTIONS.H;
     buttonUndoEl.disabled = true;
     buttonStartEl.disabled = true;
-    statusEl.textContent = "Place your Carrier";
+    statusEl.textContent = "Place: Carrier";
   }
 
   function onStart() {
@@ -327,7 +333,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     syncPhase();
     activeBoard = BOARDS.ENEMY;
     syncBoard();
-    statusEl.textContent = "Your turn";
+    statusEl.textContent = "Select target";
   }
 
   function onSelect(event) {
@@ -390,6 +396,26 @@ export function init(controller, { playerBoard, enemyBoard }) {
     clearPreview(playerBoard);
   }
 
+  function syncTurn() {
+    const isPlay =
+      controller.phase === GAMEPHASE.PLAY && !controller.isGameOver;
+
+    if (!isPlay) {
+      gameEl.removeAttribute("data-turn");
+      turnStatusEl.hidden = true;
+      return;
+    }
+
+    const activePlayer = controller.getPlayer(controller.activePlayer);
+
+    gameEl.dataset.turn = controller.activePlayer;
+    turnStatusEl.hidden = false;
+    turnStatusEl.textContent =
+      controller.activePlayer === 0
+        ? "Your turn"
+        : `${activePlayer.name}'s turn`;
+  }
+
   function syncBoard() {
     gameEl.dataset.board = activeBoard;
     boardLabelNode.nodeValue =
@@ -409,6 +435,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
     buttonToggleBoardEl.hidden = interact;
     for (const button of queueEl.querySelectorAll("button"))
       button.disabled = !interact;
+    syncTurn();
     if (controller.isGameOver) gameoverEl.showModal();
     else gameoverEl.close();
   }
@@ -447,5 +474,5 @@ export function init(controller, { playerBoard, enemyBoard }) {
   syncPhase();
   syncBoard();
   buttonStartEl.disabled = true;
-  statusEl.textContent = "Place your Carrier";
+  statusEl.textContent = "Place: Carrier";
 }
