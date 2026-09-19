@@ -246,7 +246,6 @@ export function init(controller, { playerBoard, enemyBoard }) {
         await sleep(DELAY_MS.PLAYER);
     }
 
-    await sleep(DELAY_MS.PLAYER);
     busy = false;
     activeBoard = BOARDS.ENEMY;
     syncBoard();
