@@ -1,7 +1,5 @@
-import {
-  createIcons,
-  icons,
-} from "https://cdn.jsdelivr.net/npm/lucide@1.46.0/+esm";
+import { createIcons } from "lucide";
+import { icons } from "./icons.js";
 import { DELAY_MS, DIRECTIONS, FLEET, SIZE } from "../constants.js";
 import { GAMEPHASE, SHIP_STATES } from "../controller.js";
 import { calcCol, calcRow, fitsBoard, sleep, spanCells } from "../grid.js";
