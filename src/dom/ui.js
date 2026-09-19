@@ -295,6 +295,7 @@ export function init(controller, { playerBoard, enemyBoard }) {
 
   function onRestart() {
     controller.resetGame();
+    selectedShip = null;
     repaint();
     syncPhase();
     activeBoard = BOARDS.PLAYER;
