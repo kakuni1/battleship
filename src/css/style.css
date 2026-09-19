@@ -1,6 +1,11 @@
 :root {
   --color-water: #bcd7ea;
   --color-sunk: #8c2f2f;
+  --color-sunk-carrier: #fde047;
+  --color-sunk-battleship: #67e8f9;
+  --color-sunk-cruiser: #86efac;
+  --color-sunk-submarine: #d8b4fe;
+  --color-sunk-destroyer: #fda4af;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -322,6 +327,31 @@
 
 .cell.sunk {
   background: var(--color-sunk);
+}
+
+.cell.sunk.sunk-carrier {
+  border-width: 3px;
+  border-color: var(--color-sunk-carrier);
+}
+
+.cell.sunk.sunk-battleship {
+  border-width: 3px;
+  border-color: var(--color-sunk-battleship);
+}
+
+.cell.sunk.sunk-cruiser {
+  border-width: 3px;
+  border-color: var(--color-sunk-cruiser);
+}
+
+.cell.sunk.sunk-submarine {
+  border-width: 3px;
+  border-color: var(--color-sunk-submarine);
+}
+
+.cell.sunk.sunk-destroyer {
+  border-width: 3px;
+  border-color: var(--color-sunk-destroyer);
 }
 
 .preview-valid {

@@ -9,6 +9,14 @@ const SHIP_CLASSES = Object.freeze({
   ACTIVE: "active",
 });
 
+const SUNK_BORDER_CLASSES = Object.freeze({
+  CARRIER: "sunk-carrier",
+  BATTLESHIP: "sunk-battleship",
+  CRUISER: "sunk-cruiser",
+  SUBMARINE: "sunk-submarine",
+  DESTROYER: "sunk-destroyer",
+});
+
 const PREVIEW_CLASSES = Object.freeze({
   VALID: "preview-valid",
   INVALID: "preview-invalid",
@@ -34,11 +42,16 @@ export function createBoard() {
 
 export function updateBoard(boardEl, gameboard) {
   for (const [key, cell] of boardEl.querySelectorAll(".cell").entries()) {
+    const ship = gameboard.shipAt(key);
     const result = gameboard.resultAt(key);
-    const sunk = gameboard.shipAt(key)?.isSunk ?? false;
+    const sunk = ship?.isSunk ?? false;
     if (result === SHIP_CLASSES.MISS) cell.classList.add(SHIP_CLASSES.MISS);
     if (result === SHIP_CLASSES.HIT) cell.classList.add(SHIP_CLASSES.HIT);
-    if (sunk) cell.classList.add(SHIP_CLASSES.SUNK);
+
+    if (sunk) {
+      cell.classList.add(SHIP_CLASSES.SUNK);
+      cell.classList.add(SUNK_BORDER_CLASSES[ship.name.toUpperCase()]);
+    }
   }
 }
 
@@ -46,6 +59,8 @@ export function clearBoard(boardEl) {
   for (const cell of boardEl.querySelectorAll(".cell")) {
     for (const shipClass of Object.values(SHIP_CLASSES))
       cell.classList.remove(shipClass);
+    for (const borderClass of Object.values(SUNK_BORDER_CLASSES))
+      cell.classList.remove(borderClass);
     for (const previewClass of Object.values(PREVIEW_CLASSES))
       cell.classList.remove(previewClass);
   }
