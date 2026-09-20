@@ -1,4 +1,5 @@
 import { FLEET, SIZE } from "./constants.js";
+import { fitsBoard, spanCells } from "./grid.js";
 import { shuffle } from "./shuffle.js";
 
 export function autoFleet(board, maxRestarts = 10) {
@@ -26,33 +27,23 @@ function randomFleet(board) {
   return true;
 }
 
-function forCell(key, length, direction) {
-  // generate random placements
-  return Array.from({ length }, (_, i) =>
-    direction === "horizontal" ? key + i : key + i * SIZE,
-  );
-}
-
 function canCell(length) {
   // filter out-of-bounds considering ship length
   const cans = [];
 
   for (let key = 0; key < SIZE * SIZE; key++) {
-    const col = key % SIZE;
-    const row = Math.floor(key / SIZE);
-
-    if (col + length <= SIZE) {
+    if (fitsBoard(key, length, "horizontal")) {
       cans.push({
         key,
         direction: "horizontal",
-        cells: forCell(key, length, "horizontal"),
+        cells: spanCells(key, length, "horizontal"),
       });
     }
-    if (row + length <= SIZE) {
+    if (fitsBoard(key, length, "vertical")) {
       cans.push({
         key,
         direction: "vertical",
-        cells: forCell(key, length, "vertical"),
+        cells: spanCells(key, length, "vertical"),
       });
     }
   }

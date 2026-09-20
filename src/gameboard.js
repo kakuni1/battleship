@@ -1,4 +1,5 @@
-import { FLEET, SIZE } from "./constants.js";
+import { DIRECTIONS, FLEET, SIZE } from "./constants.js";
+import { fitsBoard, spanCells } from "./grid.js";
 import { Ship } from "./ship.js";
 
 export class Gameboard {
@@ -13,6 +14,7 @@ export class Gameboard {
 
   placeShip(key, name, direction) {
     this.#validateKey(key, "place");
+    if (this.#attacks.size > 0) throw new Error("place, game already started");
 
     // ship check
     const entry = FLEET.find((s) => s.name === name);
@@ -22,26 +24,16 @@ export class Gameboard {
     if (this.#ships.has(name)) throw new Error("place, ship already placed");
 
     // direction check
-    if (!["horizontal", "vertical"].includes(direction)) {
+    if (!Object.values(DIRECTIONS).includes(direction)) {
       throw new Error("place, invalid direction");
     }
 
     // wrap check
-    if (direction === "horizontal" && (key % SIZE) + entry.length > SIZE) {
+    if (!fitsBoard(key, entry.length, direction))
       throw new Error("place, out of bounds");
-    }
-    if (
-      direction === "vertical" &&
-      Math.floor(key / SIZE) + entry.length > SIZE
-    ) {
-      throw new Error("place, out of bounds");
-    }
 
     // overlap check
-    const cells = [];
-    for (let i = 0; i < entry.length; i++) {
-      cells.push(direction === "horizontal" ? key + i : key + i * SIZE);
-    }
+    const cells = spanCells(key, entry.length, direction);
     for (const cell of cells) {
       if (this.#grid[cell] !== null) throw new Error("place, cell occupied");
     }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
+    <title>Battleship</title>
+    <link rel="stylesheet" href="/src/css/base.css">
+    <link rel="stylesheet" href="/src/css/style.css">
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><style>path{stroke:%23000}@media(prefers-color-scheme:dark){path{stroke:%23fff}}</style><path d='M12
+       2v2'/><path d='M12 9.189V13'/><path d='M19 12V6a2 2 0 00-2-2H7a2 2 0 00-2 2v6'/><path d='M19.38 19A11.6 11.6 0 0021 13l-8.188-3.639a2 2 0 00-1.624 0L3 13.001a11.6 11.6 0 002.81 7.76'/><path d='M2 20c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1s1.2 1 2.5 1c2.5 0 2.5-2 5-2
+       1.3 0 1.9.5 2.5 1'/></svg>"
+      type="image/svg+xml"
+    >
+    <script type="module" src="/src/main.js"></script>
+  </head>
+  <body>
+    <main>
+      <h1>Battleship</h1>
+      <p id="turn-status" hidden></p>
+      <p id="status"></p>
+      <section id="menu">
+        <form id="menu-form">
+          <label id="label-name" for="player-name">Your name</label>
+          <input
+            id="player-name"
+            type="text"
+            maxlength="20"
+            autocomplete="off"
+            placeholder="Player 1"
+            autofocus
+          >
+          <button type="submit">Enter</button>
+        </form>
+      </section>
+      <section id="game" data-phase="menu">
+        <div id="ship-panel">
+          <h3>Ships</h3>
+          <ul id="ship-queue"></ul>
+        </div>
+        <div id="panel-controls">
+          <div id="button-actions">
+            <button type="button" id="button-undo" disabled>
+              <i data-lucide="undo-2"></i>Undo
+            </button>
+            <button type="button" id="button-rotate">
+              <i data-lucide="rotate-cw"></i>Rotate
+            </button>
+            <button type="button" id="button-reset">
+              <i data-lucide="eraser"></i>Reset
+            </button>
+            <button type="button" id="button-start" disabled>
+              <i data-lucide="play"></i>Start Game
+            </button>
+          </div>
+          <button type="button" id="button-toggle-board" hidden>
+            <i data-lucide="replace"></i>Board
+          </button>
+          <button type="button" id="button-restart">
+            <i data-lucide="refresh-cw"></i>
+            Restart Game
+          </button>
+        </div>
+        <h2>Your Fleet</h2>
+        <div id="player-board"></div>
+        <h2>Enemy Waters</h2>
+        <div id="enemy-board"></div>
+        <dialog id="gameover">
+          <p id="winner"></p>
+          <button type="button" id="button-again">
+            <i data-lucide="refresh-cw"></i>Play Again
+          </button>
+        </dialog>
+      </section>
+    </main>
+  </body>
+</html>
