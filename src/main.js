@@ -1,6 +1,6 @@
 import { createIcons } from "lucide";
-import { icons } from "./dom/icons.js";
 import { GameController } from "./controller.js";
+import { icons } from "./dom/icons.js";
 import { createBoard } from "./dom/render.js";
 import { init } from "./dom/ui.js";
 

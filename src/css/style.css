@@ -210,22 +210,6 @@
   text-align: center;
 }
 
-#game[data-turn="0"] > h2:nth-of-type(2),
-#game[data-turn="1"] > h2:first-of-type {
-  color: var(--color-text);
-}
-
-#game[data-turn="0"] #enemy-board,
-#game[data-turn="1"] #player-board {
-  outline: 2px solid var(--color-focus);
-  border-radius: 0.25rem;
-}
-
-#game[data-turn="1"] #enemy-board,
-#game[data-turn="0"] #player-board {
-  opacity: 0.65;
-}
-
 #game > h2 {
   color: var(--color-muted);
   margin: 0;
@@ -260,6 +244,22 @@
 #enemy-board {
   grid-area: enemy-board;
   min-width: 0;
+}
+
+#game[data-turn="0"] > h2:nth-of-type(2),
+#game[data-turn="1"] > h2:first-of-type {
+  color: var(--color-text);
+}
+
+#game[data-turn="0"] #enemy-board,
+#game[data-turn="1"] #player-board {
+  outline: 2px solid var(--color-focus);
+  border-radius: 0.25rem;
+}
+
+#game[data-turn="1"] #enemy-board,
+#game[data-turn="0"] #player-board {
+  opacity: 0.65;
 }
 
 .board {
